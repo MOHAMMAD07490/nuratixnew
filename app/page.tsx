@@ -314,7 +314,7 @@ export default function App() {
         }
         @keyframes marquee {
           0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
+          100% { transform: translateX(-100%); }
         }
         @keyframes pulse-ring {
           0% { transform: scale(0.95); opacity: 0.1; }
@@ -627,16 +627,18 @@ export default function App() {
           <div className="flex items-center justify-center gap-16 md:gap-24 px-8 md:px-12 animate-[marquee_20s_linear_infinite]">
             <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity brightness-0 invert" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <svg className="h-8 md:h-12 w-auto opacity-50 hover:opacity-100 transition-opacity brightness-0 invert" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="#000000"/></svg>
             <img src="/zai.png" alt="Zai" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/mistral.png" alt="Mistral" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
           <div className="flex items-center justify-center gap-16 md:gap-24 px-8 md:px-12 animate-[marquee_20s_linear_infinite]" aria-hidden="true">
             <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity brightness-0 invert" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <svg className="h-8 md:h-12 w-auto opacity-50 hover:opacity-100 transition-opacity brightness-0 invert" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="#000000"/></svg>
             <img src="/zai.png" alt="Zai" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/mistral.png" alt="Mistral" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
@@ -1063,60 +1065,23 @@ const Skiper34 = () => {
 
 const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
   const vertMargin = 10;
-  const container = useRef(null);
-  const [maxScrollY, setMaxScrollY] = useState(Infinity);
-
-  const filter = useMotionValue(0);
-  const negateFilter = useTransform(filter, (value: number) => -value);
-
-  const { scrollY } = useScroll({
-    target: container,
-  });
-  
-  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 10000], [1, 0]);
-  const isInView = useInView(container, {
-    margin: `0px 0px -${100 - vertMargin}% 0px`,
-    once: true,
-  });
-
-  scrollY.on("change", (scrollYValue) => {
-    let animationValue = 1;
-    if (scrollYValue > maxScrollY) {
-      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 10000);
-    }
-    scale.set(animationValue);
-    filter.set((1 - animationValue) * 100);
-  });
-
-  useEffect(() => {
-    if (isInView) {
-      setMaxScrollY(scrollY.get());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInView]);
 
   return (
-    <motion.div
-      ref={container}
-      className="rounded-[3rem] sticky h-[200px] w-full max-w-5xl overflow-hidden bg-neutral-900 shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-white/10"
+    <div
+      className="rounded-[3rem] sticky w-full max-w-5xl overflow-hidden bg-neutral-900 shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-white/10"
       style={{
-        scale: scale,
-        rotate: filter,
         height: `${100 - 2 * vertMargin}vh`,
         top: `${vertMargin}vh`,
       }}
     >
-      <motion.img
+      <img
         src={imgUrl}
         alt={imgUrl}
         loading="eager"
         fetchPriority="high"
-        style={{
-          rotate: negateFilter,
-        }}
-        className="h-full w-full scale-125 object-cover"
+        className="h-full w-full object-cover"
         sizes="90vw"
       />
-    </motion.div>
+    </div>
   );
 };
