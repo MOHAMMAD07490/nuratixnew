@@ -8,7 +8,7 @@ import { CodeComparison } from "@/registry/magicui/code-comparison";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import { SmoothInput } from "@/components/ui/smooth-input";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import Goo from "gooey-react";
 
 const beforeCode = `import { NextRequest } from 'next/server';
@@ -78,10 +78,14 @@ function CodeComparisonDemo() {
   )
 }
 
-function PromptToCodeDemo({ scrollY }: { scrollY: number }) {
+function PromptToCodeDemo() {
   const [step, setStep] = useState(0);
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
+
+  const { scrollY } = useScroll();
+  const rotateX = useTransform(scrollY, [0, 500], [0, 10]);
+  const translateY = useTransform(scrollY, [0, 500], [0, 12]);
   
   const targetInput = "easily add animation, generate landing page";
   const targetOutput = `import { motion } from "motion/react";
@@ -132,11 +136,11 @@ export function AnimatedLanding() {
 
   return (
     <div className="mx-auto w-full max-w-[1100px] relative">
-      <div 
+      <motion.div 
         style={{
-          transform: `perspective(1200px) rotateX(${Math.min(10, scrollY / 70)}deg) translateY(${Math.min(12, scrollY / 50)}px)`,
-          transformStyle: "preserve-3d" as const,
-          transition: "transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)",
+          rotateX: rotateX,
+          translateY: translateY,
+          transformStyle: "preserve-3d",
         }}
         className="w-full rounded-xl border border-zinc-800 bg-black overflow-hidden shadow-2xl"
       >
@@ -189,7 +193,7 @@ export function AnimatedLanding() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -212,8 +216,20 @@ const CircleNode: React.FC<CircleNodeProps> = ({ className, children, style }) =
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { scrollY } = useScroll();
+  const heroInputOpacity = useTransform(scrollY, [0, 150], [1, 0]);
+  const heroInputRotateX = useTransform(scrollY, [0, 150], [0, 25]);
+  const heroInputTranslateY = useTransform(scrollY, [0, 150], [0, -135]);
+  const heroInputScale = useTransform(scrollY, [0, 300], [1, 0.6]);
+
+  const navInputOpacity = useTransform(scrollY, [80, 120], [0, 1]);
+  const navInputY = useTransform(scrollY, [80, 120], [-20, 0]);
+  const navInputScale = useTransform(scrollY, [80, 120], [0.8, 1]);
+
+  const gooeyX = useTransform(scrollY, [0, 120], [0, 20]);
+  const gooeyScale = useTransform(scrollY, [0, 80, 120], [1, 1.2, 0]);
 
   const latestArticle = {
     title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
@@ -226,7 +242,6 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-      setScrollY(window.scrollY);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -332,19 +347,9 @@ export default function App() {
               <Goo>
                 <div className="flex items-center justify-center relative w-8 h-8">
                   <motion.div
-                    animate={scrollY < 120 ? {
-                      x: 20,
-                      scale: [1, 1.2, 0.8, 0],
-                      borderRadius: 40,
-                    } : {
-                      x: 0,
-                      scale: 1,
-                      borderRadius: 40,
-                    }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 30,
+                    style={{
+                      x: gooeyX,
+                      scale: gooeyScale,
                     }}
                     className="bg-white absolute w-3.5 h-3.5 rounded-full"
                   />
@@ -358,22 +363,15 @@ export default function App() {
 
           {/* Docking Search Input box that appears on scroll */}
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.8 }}
-            animate={scrollY >= 80 ? {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-            } : {
-              opacity: 0,
-              y: -20,
-              scale: 0.8,
+            style={{
+              opacity: navInputOpacity,
+              y: navInputY,
+              scale: navInputScale,
             }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25,
-            }}
-            className="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 max-w-xs w-64 absolute left-1/2 -translate-x-1/2"
+            className={cn(
+              "hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 max-w-xs w-64 absolute left-1/2 -translate-x-1/2",
+              isScrolled ? "pointer-events-auto" : "pointer-events-none"
+            )}
           >
             <input
               type="text"
@@ -425,9 +423,11 @@ export default function App() {
           </h1>
           <motion.div 
             style={{
-              opacity: Math.max(0, 1 - scrollY / 150),
-              transform: `perspective(1000px) rotateX(${Math.min(25, scrollY / 6)}deg) translateY(${-scrollY * 0.9}px) scale(${Math.max(0.6, 1 - scrollY / 300)})`,
-              transformStyle: "preserve-3d" as const,
+              opacity: heroInputOpacity,
+              rotateX: heroInputRotateX,
+              translateY: heroInputTranslateY,
+              scale: heroInputScale,
+              transformStyle: "preserve-3d",
             }}
             className="w-full max-w-md mx-auto group"
           >
@@ -555,7 +555,7 @@ export default function App() {
             Easily add animations, generate landing pages, click send, and watch the AI write production-ready code in seconds.
           </p>
           <div className="w-full">
-            <PromptToCodeDemo scrollY={scrollY} />
+            <PromptToCodeDemo />
           </div>
         </div>
       </section>
