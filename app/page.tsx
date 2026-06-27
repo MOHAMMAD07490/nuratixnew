@@ -218,50 +218,19 @@ export default function App() {
             </div>
           </div>
 
-          {/* Card 2: Charts */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
-            <div className="relative h-48 w-full mt-8">
-              <svg viewBox="0 0 200 100" className="w-full h-full overflow-visible">
-                <defs>
-                  <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
-                    <stop offset="50%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.5" />
-                  </linearGradient>
-                  <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path d="M 0 80 Q 40 70 80 50 T 160 30 T 200 60" fill="none" stroke="url(#lineGrad)" strokeWidth="3" strokeDasharray="300" strokeDashoffset="300" style={{ animation: 'draw-line 2s ease forwards' }} />
-                <path d="M 0 80 Q 40 70 80 50 T 160 30 T 200 60 L 200 100 L 0 100 Z" fill="url(#fillGrad)" className="opacity-0 animate-[fade-in_1s_ease_1s_forwards]" />
-                <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-300 transform translate-x-[80px] translate-y-[50px]">
-                  <circle r="4" fill="white" />
-                  <circle r="12" fill="none" stroke="white" strokeWidth="1" className="animate-[pulse-ring_2s_infinite]" />
-                  <rect x="-20" y="-35" width="40" height="20" rx="4" fill="black" stroke="rgba(255,255,255,0.2)" />
-                  <text x="0" y="-22" fill="white" fontSize="10" textAnchor="middle">2,101</text>
-                </g>
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-xl font-medium mb-2">Instant Insight Reporting</h3>
-              <p className="text-gray-400 text-sm">Transform raw data into clear insights in seconds. Empower smarter decisions with real-time, always-learning intelligence.</p>
-            </div>
-          </div>
-
           {/* Card 3: Automation */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
+          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden md:col-span-2">
             <div className="relative h-48 w-full flex items-center justify-center">
-               <div className="w-full max-w-[80%] space-y-3">
+               <div className="w-full max-w-[80%] md:max-w-[60%] space-y-3">
                   <div className="flex text-[10px] text-gray-500 justify-between px-4 mb-2">
                     <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
                   </div>
-                  <div className="h-8 bg-blue-600 rounded-full w-full relative flex items-center justify-center text-xs font-medium group-hover:scale-[1.02] transition-transform">
-                    <div className="absolute top-[-25px] bg-black border border-white/10 px-2 py-1 rounded text-[10px]">12:00 AM</div>
+                  <div className="h-8 bg-white text-black rounded-full w-full relative flex items-center justify-center text-xs font-semibold group-hover:scale-[1.02] transition-transform">
+                    <div className="absolute top-[-25px] bg-black border border-white/10 px-2 py-1 rounded text-[10px] text-white">12:00 AM</div>
                     <div className="absolute top-[-10px] bottom-[-60px] w-px bg-white/20 left-1/2"></div>
                     Bento Grid
                   </div>
-                  <div className="h-8 bg-blue-500/40 rounded-full w-3/4 ml-auto flex items-center justify-center text-xs font-medium border border-blue-400/20 group-hover:bg-blue-500/60 transition-colors">
+                  <div className="h-8 bg-zinc-900 rounded-full w-3/4 ml-auto flex items-center justify-center text-xs font-medium border border-zinc-800 group-hover:bg-zinc-800 transition-colors text-white">
                     Landing Page
                   </div>
                   <div className="h-8 bg-white/5 border border-dashed border-white/20 rounded-full w-1/2 ml-10 flex items-center justify-center text-xs text-gray-400 group-hover:border-white/40 transition-colors">
@@ -269,9 +238,9 @@ export default function App() {
                   </div>
                </div>
             </div>
-            <div>
-              <h3 className="text-xl font-medium mb-2">Smart Automation</h3>
-              <p className="text-gray-400 text-sm">Set it, forget it. Your AI Agent tackles repetitive tasks so you can focus on strategy, innovation, and growth.</p>
+            <div className="text-center mt-4">
+              <h3 className="text-2xl font-medium mb-3">Smart Automation</h3>
+              <p className="text-gray-400 text-base max-w-2xl mx-auto">Set it, forget it. Your AI Agent tackles repetitive tasks so you can focus on strategy, innovation, and growth.</p>
             </div>
           </div>
         </div>
