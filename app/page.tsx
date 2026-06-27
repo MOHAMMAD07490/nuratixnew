@@ -224,7 +224,7 @@ export default function App() {
 
   const latestArticle = {
     title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
-    url: "/blog/145b93d5",
+    url: "https://blog.noxyai.com/145b93d5",
     thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/bc796316-1782492391573.png"
   };
   const nuratixLogo = "/white-logo.png";
@@ -429,7 +429,7 @@ export default function App() {
       {/* --- PERSISTENT GLOBAL HEADER --- */}
       <header className="fixed top-0 left-0 w-full z-[100] p-6 flex justify-between items-center pointer-events-none">
         <div className="flex items-center pointer-events-auto cursor-pointer">
-           <img src="/logo.png" alt="Nuratix" className="h-6 md:h-7" />
+           <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7" />
         </div>
       </header>
 
