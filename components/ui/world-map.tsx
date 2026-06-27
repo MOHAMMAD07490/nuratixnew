@@ -67,7 +67,8 @@ export default function WorldMap({
                 d={createCurvedPath(startPoint, endPoint)}
                 fill="none"
                 stroke="url(#path-gradient)"
-                strokeWidth="1"
+                strokeWidth="1.5"
+                filter="url(#line-glow)"
                 initial={{
                   pathLength: 0,
                 }}
@@ -86,10 +87,17 @@ export default function WorldMap({
         })}
 
         <defs>
+          <filter id="line-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
           <linearGradient id="path-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={lineColor} stopOpacity="0" />
-            <stop offset="10%" stopColor={lineColor} stopOpacity="0.35" />
-            <stop offset="90%" stopColor={lineColor} stopOpacity="0.35" />
+            <stop offset="10%" stopColor={lineColor} stopOpacity="0.85" />
+            <stop offset="90%" stopColor={lineColor} stopOpacity="0.85" />
             <stop offset="100%" stopColor={lineColor} stopOpacity="0" />
           </linearGradient>
         </defs>

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, ArrowUp, ArrowRight, Image as ImageIcon, X, Sparkles, User, Activity, Globe as GlobeIcon } from 'lucide-react';
 import WorldMap from "@/components/ui/world-map";
 import { CpuArchitecture } from "@/components/ui/cpu-architecture";
+import GlowingEffectDemo from "@/components/glowing-effect-demo";
 
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
@@ -199,62 +200,20 @@ export default function App() {
       <section className="max-w-7xl mx-auto px-6 py-24 md:py-32">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">Empower Your Workflow with AI</h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">Ask your AI Agent for real-time collaboration, seamless integrations, and actionable insights to streamline your operations.</p>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-12">Ask your AI Agent for real-time collaboration, seamless integrations, and actionable insights to streamline your operations.</p>
         </div>
+        <GlowingEffectDemo />
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Card 1: Chat (Spans 2 columns) */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[350px] flex flex-col justify-between group overflow-hidden md:col-span-2">
-            <div className="relative h-48 w-full max-w-2xl mx-auto mt-4">
-              <div className="absolute top-4 left-4 md:left-10 bg-blue-600 text-white text-sm md:text-base p-4 md:p-5 rounded-2xl rounded-tl-none max-w-[80%] shadow-lg" style={{ animation: 'float-chat 4s ease-in-out infinite' }}>
-                Hey, I need help scheduling a team meeting that works well for everyone.
-              </div>
-              <div className="absolute bottom-4 right-4 md:right-10 bg-white/10 backdrop-blur-md text-white text-sm md:text-base p-4 md:p-5 rounded-2xl rounded-br-none max-w-[80%] border border-white/5" style={{ animation: 'float-chat 5s ease-in-out infinite reverse' }}>
-                Based on your calendar patterns, I recommend Tuesday at 2pm.
-              </div>
-            </div>
-            <div className="text-center mt-8">
-              <h3 className="text-2xl font-medium mb-3">Real-time AI Collaboration</h3>
-              <p className="text-gray-400 text-base max-w-2xl mx-auto">Experience real-time assistance. Ask your AI Agent to coordinate tasks, answer questions, and maintain team alignment effortlessly.</p>
-            </div>
-          </div>
-
-          {/* Card 3: Automation */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
-            <div className="relative h-48 w-full flex items-center justify-center">
-               <div className="w-full max-w-[80%] space-y-3">
-                  <div className="flex text-[10px] text-gray-500 justify-between px-4 mb-2">
-                    <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
-                  </div>
-                  <div className="h-8 bg-white text-black rounded-full w-full relative flex items-center justify-center text-xs font-semibold group-hover:scale-[1.02] transition-transform">
-                    <div className="absolute top-[-25px] bg-black border border-white/10 px-2 py-1 rounded text-[10px] text-white">12:00 AM</div>
-                    <div className="absolute top-[-10px] bottom-[-60px] w-px bg-white/20 left-1/2"></div>
-                    Bento Grid
-                  </div>
-                  <div className="h-8 bg-zinc-900 rounded-full w-3/4 ml-auto flex items-center justify-center text-xs font-medium border border-zinc-800 group-hover:bg-zinc-800 transition-colors text-white">
-                    Landing Page
-                  </div>
-                  <div className="h-8 bg-white/5 border border-dashed border-white/20 rounded-full w-1/2 ml-10 flex items-center justify-center text-xs text-gray-400 group-hover:border-white/40 transition-colors">
-                    + Add Task
-                  </div>
-               </div>
-            </div>
-            <div>
-              <h3 className="text-xl font-medium mb-2">Smart Automation</h3>
-              <p className="text-gray-400 text-sm">Set it, forget it. Your AI Agent tackles repetitive tasks so you can focus on strategy, innovation, and growth.</p>
-            </div>
-          </div>
-
-          {/* Card 4: CPU Core Architecture */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
-            <div className="relative h-48 w-full flex items-center justify-center">
-              <CpuArchitecture className="text-white/60 w-[80%] h-auto max-h-40" />
-            </div>
-            <div>
-              <h3 className="text-xl font-medium mb-2">Cosmic Core Architecture</h3>
-              <p className="text-gray-400 text-sm">Powered by hyper-efficient CPU scheduling and next-generation neural routing to deliver instantaneous response times.</p>
-            </div>
-          </div>
+      {/* --- Standalone GPU Architecture (Plain & Big) --- */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 text-center flex flex-col items-center">
+        <p className="text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold mb-4">[ GPU INFRASTRUCTURE ]</p>
+        <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">Cosmic Core Architecture</h2>
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-12">
+          Powered by hyper-efficient scheduling and next-generation neural routing to deliver instantaneous response times.
+        </p>
+        <div className="w-full max-w-5xl h-auto">
+          <CpuArchitecture className="text-white/80 w-full h-auto max-h-[450px]" />
         </div>
       </section>
 
@@ -344,9 +303,9 @@ export default function App() {
             </p>
           </div>
 
-          <div className="relative w-full flex flex-col items-center justify-center overflow-hidden rounded-3xl magic-border scale-105">
+          <div className="w-full flex flex-col items-center justify-center scale-105">
             <WorldMap
-              lineColor="#000000"
+              lineColor="#00ff66"
               dots={[
                 {
                   start: { lat: 64.2008, lng: -149.4937 }, // Alaska
