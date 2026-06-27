@@ -55,7 +55,7 @@ function Globe({ className }: { className?: string }) {
         { location: [25.2048, 55.2708], size: 0.08 }, // Dubai
         { location: [20.5937, 78.9629], size: 0.1 },  // India
       ],
-      onRender: (state) => {
+      onRender: (state: any) => {
         if (!pointerInteracting.current) {
           phi += 0.005;
         }
@@ -63,7 +63,7 @@ function Globe({ className }: { className?: string }) {
         state.width = currentWidth * 2;
         state.height = currentWidth * 2;
       }
-    });
+    } as any);
 
     setTimeout(() => {
       if (canvasRef.current) canvasRef.current.style.opacity = "1";
