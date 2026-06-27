@@ -222,7 +222,7 @@ export default function App() {
   const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  const articles = [
+  const [articles, setArticles] = useState([
     {
       title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
       url: "https://blog.noxyai.com/blog/145b93d5",
@@ -233,9 +233,25 @@ export default function App() {
       url: "https://blog.noxyai.com/blog/33d23557",
       thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/eadbedf8-1773417259361.png"
     }
-  ];
+  ]);
   const nuratixLogo = "/white-logo.png";
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
+
+  useEffect(() => {
+    fetch("https://blog.noxyai.com/api")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.articles) {
+          const formatted = data.articles.map((art: any) => ({
+            title: art.title,
+            url: `https://blog.noxyai.com${art.url}`,
+            thumbnail_url: art.thumbnail_url
+          }));
+          setArticles(formatted);
+        }
+      })
+      .catch((err) => console.error("Error fetching articles:", err));
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
