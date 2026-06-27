@@ -215,21 +215,11 @@ const CircleNode: React.FC<CircleNodeProps> = ({ className, children, style }) =
 
 
 export default function App() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const { scrollY } = useScroll();
-  const heroInputOpacity = useTransform(scrollY, [0, 150], [1, 0]);
-  const heroInputRotateX = useTransform(scrollY, [0, 150], [0, 25]);
-  const heroInputTranslateY = useTransform(scrollY, [0, 150], [0, -135]);
-  const heroInputScale = useTransform(scrollY, [0, 300], [1, 0.6]);
-
-  const navInputOpacity = useTransform(scrollY, [80, 120], [0, 1]);
-  const navInputY = useTransform(scrollY, [80, 120], [-20, 0]);
-  const navInputScale = useTransform(scrollY, [80, 120], [0.8, 1]);
-
-  const gooeyX = useTransform(scrollY, [0, 120], [0, 20]);
-  const gooeyScale = useTransform(scrollY, [0, 80, 120], [1, 1.2, 0]);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const latestArticle = {
     title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
@@ -240,20 +230,65 @@ export default function App() {
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    if (typeof window === 'undefined') return;
+
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Complete the entire morph animation smoothly over the first 40% of viewport height
+      const threshold = window.innerHeight * 0.40;
+      const factor = Math.min(Math.max(scrollY / threshold, 0), 1);
+      setScrollProgress(factor);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
+  // Responsive mathematical geometry for the morphing container
+  const isDesktop = windowWidth >= 768;
+  
+  // Outer dimensions of the morphing capsule
+  const startWidth = isDesktop ? 512 : windowWidth * 0.92;
+  const targetWidth = windowWidth;
+  const activeWidth = startWidth + (targetWidth - startWidth) * scrollProgress;
+
+  const startHeight = 60;
+  const targetHeight = isDesktop ? 76 : 64;
+  const activeHeight = startHeight + (targetHeight - startHeight) * scrollProgress;
+
+  // Vertical position translation
+  const startTop = isDesktop ? 55 : 50; // top offset in % of viewport height
+  const activeTop = `calc(${startTop * (1 - scrollProgress)}vh + ${10 * scrollProgress}px)`; 
+
+  // Smooth capsule-to-navbar flat layout transition
+  const activeRadius = 30 * (1 - scrollProgress);
+
   return (
-    <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/30 overflow-x-hidden">
-      {/* --- Global Styles for Animations & Magic UI --- */}
+    <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/30 overflow-x-hidden relative">
+      {/* --- CSS Animations Block --- */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes float-chat {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(2deg); }
+          50% { transform: translateY(-12px) rotate(1.5deg); }
         }
         @keyframes marquee {
           0% { transform: translateX(0%); }
@@ -263,10 +298,40 @@ export default function App() {
           to { stroke-dashoffset: 0; }
         }
         @keyframes pulse-ring {
-          0% { transform: scale(0.8); opacity: 0.5; }
-          100% { transform: scale(1.3); opacity: 0; }
+          0% { transform: scale(0.92); opacity: 0.15; }
+          100% { transform: scale(1.15); opacity: 0; }
         }
-        
+
+        /* High-fidelity liquid chrome gradient shimmer and wave distortion */
+        @keyframes liquid-gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes liquid-distortion {
+          0%, 100% { transform: translateY(0px) scale(1) skewX(0deg); }
+          50% { transform: translateY(-6px) scale(1.02) skewX(0.5deg); }
+        }
+        .fluid-headline {
+          background: linear-gradient(
+            115deg, 
+            #ffffff 0%, 
+            #f3f4f6 15%, 
+            #cbd5e1 32%, 
+            #64748b 48%, 
+            #cbd5e1 62%, 
+            #f9fafb 82%, 
+            #ffffff 100%
+          );
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: liquid-gradient 6s ease-in-out infinite, liquid-distortion 7s ease-in-out infinite;
+          display: inline-block;
+          filter: drop-shadow(0 4px 20px rgba(255,255,255,0.18));
+          will-change: transform, background-position;
+        }
+
         /* Orbit Animations (Hardcoded radii to prevent React style variable crashes) */
         @keyframes orbit-90 {
           0% { transform: rotate(0deg) translateY(-90px) rotate(0deg); }
@@ -300,7 +365,7 @@ export default function App() {
           100% { transform: translate(0, 0) scale(1.2); opacity: 0.7; }
         }
 
-        /* Animated White Beams */
+        /* Flowing Beams */
         @keyframes beam-flow-anim {
           from { stroke-dashoffset: 100; }
           to { stroke-dashoffset: 0; }
@@ -311,11 +376,9 @@ export default function App() {
           stroke-linecap: round;
           fill: none;
           stroke-dasharray: 15 85; 
-          animation: beam-flow-anim 2s linear infinite;
-          filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+          animation: beam-flow-anim 2.5s linear infinite;
         }
 
-        /* Utilities */
         .magic-border { position: relative; }
         .magic-border::before {
           content: "";
@@ -323,7 +386,7 @@ export default function App() {
           inset: 0;
           border-radius: inherit;
           padding: 1px;
-          background: linear-gradient(to bottom right, rgba(255,255,255,0.4), rgba(255,255,255,0.05), transparent);
+          background: linear-gradient(to bottom right, rgba(255,255,255,0.4), rgba(255,255,255,0.02), transparent);
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -334,22 +397,89 @@ export default function App() {
         }
       `}} />
 
-      {/* --- Navigation --- */}
-      <nav className="fixed top-0 w-full z-50 bg-[#030303] border-b border-white/5 py-4">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between relative">
-          <div className="flex items-center gap-2 cursor-pointer group relative">
-            <div className="relative z-10">
-              <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7 group-hover:opacity-80 transition-opacity" style={{ filter: 'brightness(0) invert(1)' }} />
-            </div>
+      {/* --- Dynamic Cursor Tracker Radial Ambient Aura --- */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-10 opacity-30 md:opacity-45 transition-opacity duration-700"
+        style={{
+          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.05), transparent 50%)`
+        }}
+      />
+
+      {/* --- Hero Background video stream --- */}
+      <div className="absolute top-0 left-0 w-full h-screen z-0 overflow-hidden pointer-events-none">
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-105 opacity-80">
+          <source src="/black-hole.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#030303]"></div>
+      </div>
+
+      {/* --- Cosmic Headline Text --- */}
+      <div className="absolute top-0 left-0 w-full h-screen flex flex-col justify-center items-center text-center pointer-events-none z-10">
+        <div 
+          className="transition-all duration-500 ease-out px-4"
+          style={{ 
+            opacity: 1 - scrollProgress * 1.8, 
+            transform: `translateY(-${scrollProgress * 65}px)` 
+          }}
+        >
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-medium tracking-tighter leading-[0.9] mb-4">
+            <span className="fluid-headline pb-4">
+              Understand<br />The Universe
+            </span>
+          </h1>
+          <p className="text-white/35 text-[10px] md:text-xs tracking-[0.25em] uppercase font-light mt-3 max-w-md mx-auto">
+            Autonomous Logic. Pure Refinement.
+          </p>
+        </div>
+      </div>
+
+      {/* --- MASTER MULTI-MORPHING CONDUIT --- */}
+      <div 
+        className="fixed z-40 left-1/2 -translate-x-1/2 overflow-hidden"
+        style={{
+          top: activeTop,
+          width: `${activeWidth}px`,
+          height: `${activeHeight}px`,
+          borderRadius: `${activeRadius}px`,
+          backgroundColor: `rgba(10, 10, 10, ${0.40 + scrollProgress * 0.45})`,
+          backdropFilter: `blur(${14 + scrollProgress * 14}px)`,
+          borderBottom: `1px solid rgba(255, 255, 255, ${scrollProgress * 0.08})`,
+          boxShadow: scrollProgress > 0.1 ? '0 10px 45px -12px rgba(0,0,0,0.85)' : '0 15px 40px -8px rgba(0,0,0,0.45)',
+          willChange: 'top, width, height, border-radius'
+        }}
+      >
+        <div className="w-full h-full flex items-center justify-between px-6 sm:px-8 md:px-12 max-w-7xl mx-auto relative transition-all duration-300">
+          
+          {/* --- LEFT ELEMENT: BRAND LOGO (Unfolds out smoothly) --- */}
+          <div 
+            className="flex items-center shrink-0 transition-all duration-300 ease-out relative"
+            style={{ 
+              opacity: scrollProgress, 
+              width: scrollProgress > 0.2 ? (isDesktop ? '140px' : '90px') : '0px',
+              transform: `translateX(${(1 - scrollProgress) * -25}px)`,
+              pointerEvents: scrollProgress > 0.4 ? 'auto' : 'none'
+            }}
+          >
+            <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0 filter brightness-0 invert" />
 
             {/* Gooey Animation Effect */}
             <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
               <Goo>
                 <div className="flex items-center justify-center relative w-8 h-8">
                   <motion.div
-                    style={{
-                      x: gooeyX,
-                      scale: gooeyScale,
+                    animate={scrollProgress < 0.6 ? {
+                      x: 0,
+                      scale: 1,
+                      borderRadius: 40,
+                    } : {
+                      x: 20,
+                      scale: [1, 1.2, 0.8, 0],
+                      borderRadius: 40,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
                     }}
                     className="bg-white absolute w-3.5 h-3.5 rounded-full"
                   />
@@ -361,85 +491,107 @@ export default function App() {
             </div>
           </div>
 
-          {/* Docking Search Input box that appears on scroll */}
-          <motion.div
-            style={{
-              opacity: navInputOpacity,
-              y: navInputY,
-              scale: navInputScale,
-            }}
-            className={cn(
-              "hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 max-w-xs w-64 absolute left-1/2 -translate-x-1/2",
-              isScrolled ? "pointer-events-auto" : "pointer-events-none"
-            )}
-          >
-            <input
-              type="text"
-              placeholder="Ask anything..."
-              className="w-full bg-transparent border-none outline-none text-xs text-white placeholder-white/30 font-mono"
-              readOnly
-            />
-            <button className="bg-white text-black p-1.5 rounded-full flex-shrink-0 hover:scale-105 transition-transform">
-              <ArrowUp size={12} strokeWidth={3} />
-            </button>
-          </motion.div>
+          {/* --- CENTER ELEMENT: MULTI-MORPHING CONTAINER --- */}
+          <div className="flex-1 flex justify-center items-center h-full relative px-2">
+            
+            {/* STATE A: PROMPT INPUT BOX (Dissolves entirely when docking to the top) */}
+            <div 
+              className="absolute inset-0 flex items-center justify-between transition-all duration-300 rounded-full magic-border bg-white/[0.04] border border-white/5 hover:border-white/10"
+              style={{
+                opacity: Math.max(0, 1 - scrollProgress * 2.5),
+                transform: `scale(${1 - scrollProgress * 0.12})`,
+                pointerEvents: scrollProgress > 0.35 ? 'none' : 'auto',
+                padding: '4px 6px 4px 18px'
+              }}
+            >
+              <input 
+                type="text" 
+                placeholder="Ask NoxyAI anything..." 
+                className="w-full bg-transparent border-none outline-none py-1.5 text-xs sm:text-sm placeholder-white/40 text-white font-light tracking-wide font-mono text-left" 
+              />
+              <button className="bg-white hover:bg-neutral-200 text-black p-2 rounded-full shrink-0 transition-transform active:scale-95 shadow-md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5" />
+                  <polyline points="5 12 12 5 19 12" />
+                </svg>
+              </button>
+            </div>
 
-          <div className="flex items-center gap-4">
-            <button className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium">
+            {/* STATE B: GLOBAL NAVIGATION MENU (Smoothly scales & fades in when docked) */}
+            <div 
+              className="hidden md:flex items-center gap-8 text-xs font-semibold tracking-[0.2em] uppercase text-white/50 transition-all duration-500 ease-out"
+              style={{
+                opacity: scrollProgress,
+                transform: `translateY(${(1 - scrollProgress) * 15}px) scale(${0.85 + scrollProgress * 0.15})`,
+                pointerEvents: scrollProgress > 0.7 ? 'auto' : 'none'
+              }}
+            >
+              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Products</a>
+              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Solutions</a>
+              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Pricing</a>
+              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Company</a>
+            </div>
+
+          </div>
+
+          {/* --- RIGHT ELEMENT: ACTION CTA & MENU ICON (Unfolds smoothly) --- */}
+          <div 
+            className="flex items-center justify-end shrink-0 transition-all duration-300 ease-out gap-4"
+            style={{ 
+              opacity: scrollProgress, 
+              width: scrollProgress > 0.2 ? (isDesktop ? '175px' : '50px') : '0px',
+              transform: `translateX(${(1 - scrollProgress) * 25}px)`,
+              pointerEvents: scrollProgress > 0.4 ? 'auto' : 'none'
+            }}
+          >
+            <button className="hidden sm:inline-flex items-center px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-xs font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
               TRY NOXYAI
             </button>
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+              className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all shrink-0"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
             </button>
           </div>
-        </div>
-      </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed inset-0 bg-black/95 z-40 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div className="flex flex-col items-center justify-center h-full gap-8 text-2xl font-medium">
+        </div>
+      </div>
+
+      {/* --- Mobile Slide-out Navigation Drawer --- */}
+      <div className={`fixed inset-0 bg-black/95 z-50 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="flex flex-col items-center justify-center h-full gap-8 text-xl font-medium relative">
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)} 
+            className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <a href="#" className="hover:text-gray-400 transition-colors">Products</a>
+          <a href="#" className="hover:text-gray-400 transition-colors">Solutions</a>
+          <a href="#" className="hover:text-gray-400 transition-colors">Pricing</a>
           <a href="#" className="hover:text-gray-400 transition-colors">Company</a>
-          <a href="#" className="hover:text-gray-400 transition-colors">Blog</a>
-          <button className="mt-4 px-8 py-3 rounded-full bg-white text-black text-lg font-medium hover:bg-gray-200 transition-colors">
+          <button className="mt-4 px-8 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-gray-200 transition-colors">
             TRY NOXYAI
           </button>
         </div>
       </div>
 
-      {/* --- Hero Section --- */}
-      <section className="relative h-screen w-full flex flex-col justify-center items-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full z-0">
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-105">
-            <source src="/black-hole.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#030303]"></div>
-        </div>
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 mt-32 flex flex-col items-center text-center">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-medium tracking-tighter leading-[0.9] mb-12">
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/20 filter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-              Understand<br />The Universe
-            </span>
-          </h1>
-          <motion.div 
-            style={{
-              opacity: heroInputOpacity,
-              rotateX: heroInputRotateX,
-              translateY: heroInputTranslateY,
-              scale: heroInputScale,
-              transformStyle: "preserve-3d",
-            }}
-            className="w-full max-w-md mx-auto group"
-          >
-            <div className="relative magic-border bg-white/5 backdrop-blur-xl rounded-[2rem] p-2 flex items-center transition-all duration-300 group-hover:bg-white/10 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-              <input type="text" placeholder="Ask anything..." className="w-full bg-transparent border-none outline-none px-6 py-3 text-lg placeholder-white/40 text-white" />
-              <button className="bg-white text-black p-3 rounded-full hover:scale-105 transition-transform flex-shrink-0">
-                <ArrowUp size={24} strokeWidth={2.5} />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* --- Main Contents Area --- */}
+      <main className="w-full relative z-20">
+        
+        {/* Generous spacer representing the main visual viewport */}
+        <div className="h-[100vh] w-full pointer-events-none"></div>
+
+        {/* --- Scrollable Body Segment --- */}
+        <div className="bg-[#030303] relative z-20">
 
       {/* --- Trusted Logo Ticker --- */}
       <section className="py-12 border-b border-white/5 bg-[#030303] overflow-hidden">
@@ -796,6 +948,8 @@ export default function App() {
           </div>
         </div>
       </footer>
+      </div>
+      </main>
     </div>
   );
 }
