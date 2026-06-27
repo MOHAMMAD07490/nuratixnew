@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, ArrowUp, ArrowRight, Image as ImageIcon, X, Sparkles, User, Activity, Globe as GlobeIcon } from 'lucide-react';
 import WorldMap from "@/components/ui/world-map";
+import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
@@ -156,7 +157,7 @@ export default function App() {
       <section className="relative h-screen w-full flex flex-col justify-center items-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full z-0">
           <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-105">
-            <source src="https://duzutjzl3g9ejjou.private.blob.vercel-storage.com/238264.mp4?vercel-blob-delegation=eyJzdG9yZUlkIjoic3RvcmVfRHV6VVRqWkwzZzllampvVSIsIm93bmVySWQiOiJ0ZWFtX1RudmdYdEdSM0luVGZXTXUxaFREWEMyeCIsInBhdGhuYW1lIjoiKiIsIm9wZXJhdGlvbnMiOlsiZ2V0IiwiaGVhZCJdLCJ2YWxpZFVudGlsIjoxNzgyNDk2NTMwMDMyLCJpYXQiOjE3ODI0NTMzMzEwMjF9.27SPHG1DaledMf_dd2aGWQDAf-V0y20lSzX8E7prdpM&vercel-blob-signature=9kRsROI-LMFDWLVy3UBw1UV6W5mhS_s4aJf3PH2RjDI" type="video/mp4" />
+            <source src="/black-hole.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#030303]"></div>
         </div>
@@ -219,9 +220,9 @@ export default function App() {
           </div>
 
           {/* Card 3: Automation */}
-          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden md:col-span-2">
+          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
             <div className="relative h-48 w-full flex items-center justify-center">
-               <div className="w-full max-w-[80%] md:max-w-[60%] space-y-3">
+               <div className="w-full max-w-[80%] space-y-3">
                   <div className="flex text-[10px] text-gray-500 justify-between px-4 mb-2">
                     <span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
                   </div>
@@ -238,9 +239,20 @@ export default function App() {
                   </div>
                </div>
             </div>
-            <div className="text-center mt-4">
-              <h3 className="text-2xl font-medium mb-3">Smart Automation</h3>
-              <p className="text-gray-400 text-base max-w-2xl mx-auto">Set it, forget it. Your AI Agent tackles repetitive tasks so you can focus on strategy, innovation, and growth.</p>
+            <div>
+              <h3 className="text-xl font-medium mb-2">Smart Automation</h3>
+              <p className="text-gray-400 text-sm">Set it, forget it. Your AI Agent tackles repetitive tasks so you can focus on strategy, innovation, and growth.</p>
+            </div>
+          </div>
+
+          {/* Card 4: CPU Core Architecture */}
+          <div className="magic-border bento-card rounded-3xl p-8 min-h-[400px] flex flex-col justify-between group overflow-hidden">
+            <div className="relative h-48 w-full flex items-center justify-center">
+              <CpuArchitecture className="text-white/60 w-[80%] h-auto max-h-40" />
+            </div>
+            <div>
+              <h3 className="text-xl font-medium mb-2">Cosmic Core Architecture</h3>
+              <p className="text-gray-400 text-sm">Powered by hyper-efficient CPU scheduling and next-generation neural routing to deliver instantaneous response times.</p>
             </div>
           </div>
         </div>
@@ -334,6 +346,7 @@ export default function App() {
 
           <div className="relative w-full flex flex-col items-center justify-center overflow-hidden rounded-3xl magic-border scale-105">
             <WorldMap
+              lineColor="#000000"
               dots={[
                 {
                   start: { lat: 64.2008, lng: -149.4937 }, // Alaska
