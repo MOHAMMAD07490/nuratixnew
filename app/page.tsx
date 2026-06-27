@@ -429,7 +429,7 @@ export default function App() {
       {/* --- PERSISTENT GLOBAL HEADER --- */}
       <header className="fixed top-0 left-0 w-full z-[100] p-6 flex justify-between items-center pointer-events-none">
         <div className="flex items-center pointer-events-auto cursor-pointer">
-           <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7" />
+           <img src="/logo.png" alt="Nuratix" className="h-6 md:h-7" />
         </div>
       </header>
 
@@ -897,9 +897,9 @@ export default function App() {
                 <img src={noxyaiLogo} alt="NoxyAI" className="w-1/2 h-1/2 object-contain brightness-0 invert" />
               </div>
               <div className="relative z-10 self-end">
-                <button className="magic-border bg-white/10 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/20 transition-all font-medium text-sm">
+                <a href="https://noxyai.com" className="magic-border bg-white/10 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/20 transition-all font-medium text-sm">
                   USE NOW <ArrowRight size={16} />
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -1010,7 +1010,7 @@ export default function App() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/20 gap-4 relative z-20">
             <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
-              <img src={nuratixLogo} alt="Nuratix" className="h-6" style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))' }} />
+              <img src="/logo.png" alt="Nuratix" className="h-6" style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))' }} />
             </div>
             <p className="text-gray-300 text-sm font-medium drop-shadow-md">© 2025 nuratix.com. All rights reserved.</p>
           </div>
@@ -1053,7 +1053,7 @@ const Skiper34 = () => {
         {/* Generate Images CTA */}
         <div className="flex flex-col items-center justify-center mt-32 mb-16 gap-6 relative z-30">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
-            Generate images with AI and more etc
+            Generate stunning visuals with world-class AI models
           </h2>
           <a href="https://noxyai.com/image" className="px-8 py-4 rounded-full bg-white text-black font-semibold tracking-wider hover:bg-gray-200 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
             IMAGEN
