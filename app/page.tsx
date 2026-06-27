@@ -175,24 +175,24 @@ export function AnimatedLanding() {
             </button>
           </div>
 
-          {step >= 3 && (
+          <div className={cn("transition-opacity duration-500", step >= 3 ? "opacity-100" : "opacity-0 pointer-events-none")}>
             <div className="border border-zinc-800 rounded-lg bg-black overflow-hidden flex flex-col">
               <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] font-mono text-zinc-500">
                 <span>OUTPUT: GENERATED CODE</span>
-                {outputText.length === targetOutput.length && (
+                {outputText.length === targetOutput.length && step >= 3 && (
                   <span className="text-emerald-500 font-bold animate-pulse">DONE</span>
                 )}
               </div>
               <pre className="p-4 overflow-x-auto text-left font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap min-h-[240px]">
                 <code>
                   {outputText}
-                  {outputText.length < targetOutput.length && (
+                  {outputText.length < targetOutput.length && step >= 3 && (
                     <span className="inline-block w-1.5 h-4 bg-emerald-500 ml-0.5 animate-pulse"></span>
                   )}
                 </code>
               </pre>
             </div>
-          )}
+          </div>
         </div>
       </motion.div>
     </div>
@@ -956,17 +956,18 @@ export default function App() {
           <div className="absolute bottom-[-10%] left-[35%] w-[50rem] h-[50rem] bg-orange-500/40 rounded-full blur-[120px] mix-blend-screen" style={{ animation: 'orb-move-3 22s ease-in-out infinite' }}></div>
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-24 relative">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-24 relative">
             {[
-              { title: "TRY NURATIX.COM ON", links: ["Web", "Android"] },
-              { title: "PRODUCTS", links: ["NoxyAI", "Image"] },
-              { title: "COMPANY", links: ["About Us", "Blog", "Support"] },
-              { title: "LEGAL", links: ["Privacy", "Terms", "Community"] }
+              { title: "TRY NURATIX.COM ON", links: [{name: "Web", url: "https://noxyai.com"}, {name: "Android", url: "https://noxyai.com"}] },
+              { title: "PRODUCTS", links: [{name: "NoxyAI", url: "https://noxyai.com"}, {name: "Image", url: "https://noxyai.com/image"}] },
+              { title: "COMPANY", links: [{name: "About Us", url: "https://aboutus.nuratix.com"}, {name: "Blog", url: "https://blog.noxyai.com"}, {name: "Support", url: "https://support.noxyai.com"}] },
+              { title: "LEGAL", links: [{name: "Privacy", url: "https://policies.noxyai.com/privacy"}, {name: "Terms", url: "https://policies.noxyai.com/terms"}, {name: "Community", url: "https://community.noxyai.com"}] },
+              { title: "SOCIALS", links: [{name: "Follow Us", url: "https://linktree.noxyai.com"}] }
             ].map((col, idx) => (
               <div key={idx} className="flex flex-col gap-6 text-sm">
                 <h4 className="text-gray-300 tracking-[0.2em] uppercase font-semibold text-xs mb-2 drop-shadow-md">{col.title}</h4>
                 {col.links.map((link, lIdx) => (
-                  <a key={lIdx} href="#" className="text-white hover:text-white inline-block transition-all duration-300 hover:translate-x-1 hover:-translate-y-0.5 drop-shadow-md font-medium">{link}</a>
+                  <a key={lIdx} href={link.url} className="text-white hover:text-white inline-block transition-all duration-300 hover:translate-x-1 hover:-translate-y-0.5 drop-shadow-md font-medium">{link.name}</a>
                 ))}
               </div>
             ))}
