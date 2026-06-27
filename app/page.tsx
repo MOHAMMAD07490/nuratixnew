@@ -229,171 +229,151 @@ export default function App() {
   const nuratixLogo = "https://nuratix.com/logo.png";
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
-  const [dimensions, setDimensions] = useState({
-    startWidth: 512,
-    targetWidth: 1200,
-    startTop: 440,
-    targetTop: 10,
-    targetHeight: 76,
-  });
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     setWindowWidth(window.innerWidth);
     setWindowHeight(window.innerHeight);
 
-    const updateDimensions = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const isDesktop = width >= 768;
-      
-      setWindowWidth(width);
-      setWindowHeight(height);
-      setDimensions({
-        startWidth: isDesktop ? 512 : width * 0.92,
-        targetWidth: width,
-        startTop: isDesktop ? height * 0.55 : height * 0.50,
-        targetTop: 10,
-        targetHeight: isDesktop ? 76 : 64,
-      });
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
     };
 
-    updateDimensions();
-
     const handleScroll = () => {
-      setIsDocked(window.scrollY > 80);
+      setIsDocked(window.scrollY > (window.innerHeight * 0.45 * 0.65));
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
-      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
   const isDesktop = windowWidth >= 768;
+  
+  // Morph completes smoothly over the first 45% of the viewport height
+  const threshold = windowHeight * 0.45;
+
+  const startWidth = isDesktop ? 540 : windowWidth * 0.90;
+  const targetWidth = windowWidth;
+
+  const startHeight = 64;
+  const targetHeight = isDesktop ? 80 : 68;
+
+  // GPU translation coordinates
+  const startY = windowHeight * 0.58; 
+  const targetY = 0; // Lock flush with top edge
+
   const { scrollY } = useScroll();
 
-  // Morph values linked natively to scrollY
-  const activeWidth = useTransform(scrollY, [0, 120], [dimensions.startWidth, dimensions.targetWidth]);
-  const activeHeight = useTransform(scrollY, [0, 120], [60, dimensions.targetHeight]);
-  const activeTop = useTransform(scrollY, [0, 120], [dimensions.startTop, dimensions.targetTop]);
-  const activeRadius = useTransform(scrollY, [0, 120], [30, 0]);
-  const activeBg = useTransform(scrollY, [0, 120], ["rgba(10, 10, 10, 0.4)", "rgba(10, 10, 10, 0.85)"]);
-  const activeBorderColor = useTransform(scrollY, [0, 120], ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.08)"]);
+  // Morph values linked natively to scrollY using Framer Motion
+  const activeWidth = useTransform(scrollY, [0, threshold], [startWidth, targetWidth]);
+  const activeHeight = useTransform(scrollY, [0, threshold], [startHeight, targetHeight]);
+  const activeY = useTransform(scrollY, [0, threshold], [startY, targetY]);
+  const activeRadius = useTransform(scrollY, [0, threshold], [32, 0]);
+  const activeBg = useTransform(scrollY, [0, threshold], ["rgba(255, 255, 255, 0.02)", "rgba(255, 255, 255, 0.06)"]);
+  const activeBorderBottom = useTransform(scrollY, [0, threshold], ["1px solid rgba(255, 255, 255, 0.1)", "1px solid rgba(255, 255, 255, 0.15)"]);
+  
+  // Intense glassy dimensional shadows
+  const activeShadow = useTransform(scrollY, [0, threshold * 0.1, threshold], [
+    "0 35px 70px -15px rgba(0,0,0,0.95), inset 0 1.5px 0 0 rgba(255,255,255,0.22), inset 0 -1px 0 0 rgba(255,255,255,0.05), 0 0 40px -20px rgba(255,255,255,0.15)",
+    "0 35px 70px -15px rgba(0,0,0,0.95), inset 0 1.5px 0 0 rgba(255,255,255,0.22), inset 0 -1px 0 0 rgba(255,255,255,0.05), 0 0 40px -20px rgba(255,255,255,0.15)",
+    "0 20px 45px -15px rgba(0,0,0,0.95)"
+  ]);
 
   // Inner element morph styles
-  const logoWidth = useTransform(scrollY, [0, 60, 120], [0, 50, isDesktop ? 140 : 90]);
-  const logoOpacity = useTransform(scrollY, [0, 60, 120], [0, 0.5, 1]);
-  const logoX = useTransform(scrollY, [0, 120], [-25, 0]);
+  const glassGlareOpacity = useTransform(scrollY, [0, threshold], [1, 0]);
+  const inputOpacity = useTransform(scrollY, [0, threshold * 0.4], [1, 0]);
+  const inputScale = useTransform(scrollY, [0, threshold * 0.4], [1, 0.92]);
 
-  const inputOpacity = useTransform(scrollY, [0, 50], [1, 0]);
-  const inputScale = useTransform(scrollY, [0, 50], [1, 0.88]);
+  const logoOpacity = useTransform(scrollY, [threshold * 0.5, threshold], [0, 1]);
+  const logoScale = useTransform(scrollY, [threshold * 0.5, threshold], [0.92, 1]);
 
-  const navOpacity = useTransform(scrollY, [60, 100], [0, 1]);
-  const navY = useTransform(scrollY, [60, 100], [15, 0]);
-  const navScale = useTransform(scrollY, [60, 100], [0.85, 1]);
-
-  const rightWidth = useTransform(scrollY, [0, 60, 120], [0, 50, isDesktop ? 175 : 50]);
-  const rightOpacity = useTransform(scrollY, [0, 60, 120], [0, 0.5, 1]);
-  const rightX = useTransform(scrollY, [0, 120], [25, 0]);
-
-  const headlineOpacity = useTransform(scrollY, [0, 90], [1, 0]);
-  const headlineY = useTransform(scrollY, [0, 90], [0, -65]);
+  const headlineOpacity = useTransform(scrollY, [0, threshold * 0.85], [1, 0]);
+  const headlineY = useTransform(scrollY, [0, threshold * 0.85], [0, -60]);
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#010103] text-white font-sans selection:bg-white/30 overflow-x-hidden relative">
       {/* --- CSS Animations Block --- */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes float-chat {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-12px) rotate(1.5deg); }
+          50% { transform: translateY(-10px) rotate(1deg); }
         }
         @keyframes marquee {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes draw-line {
-          to { stroke-dashoffset: 0; }
-        }
         @keyframes pulse-ring {
-          0% { transform: scale(0.92); opacity: 0.15; }
-          100% { transform: scale(1.15); opacity: 0; }
+          0% { transform: scale(0.95); opacity: 0.1; }
+          100% { transform: scale(1.1); opacity: 0; }
         }
 
-        /* High-fidelity liquid chrome gradient shimmer and wave distortion */
+        /* Iridescent liquid chrome title animation */
         @keyframes liquid-gradient {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        @keyframes liquid-distortion {
-          0%, 100% { transform: translateY(0px) scale(1) skewX(0deg); }
-          50% { transform: translateY(-6px) scale(1.02) skewX(0.5deg); }
+        @keyframes liquid-mercury {
+          0%, 100% { transform: translateY(0px) scale(1) rotate(0deg) skewX(0deg); }
+          50% { transform: translateY(-5px) scale(1.015) rotate(-0.3deg) skewX(0.5deg); }
         }
         .fluid-headline {
           background: linear-gradient(
-            115deg, 
+            110deg, 
             #ffffff 0%, 
-            #f3f4f6 15%, 
-            #cbd5e1 32%, 
-            #64748b 48%, 
-            #cbd5e1 62%, 
-            #f9fafb 82%, 
+            #f8fafc 12%, 
+            #cbd5e1 28%, 
+            #64748b 45%, 
+            #1e293b 55%, 
+            #64748b 65%, 
+            #cbd5e1 78%, 
+            #f1f5f9 90%, 
             #ffffff 100%
           );
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          animation: liquid-gradient 6s ease-in-out infinite, liquid-distortion 7s ease-in-out infinite;
+          animation: liquid-gradient 5s ease-in-out infinite, liquid-mercury 5.5s ease-in-out infinite;
           display: inline-block;
-          filter: drop-shadow(0 4px 20px rgba(255,255,255,0.18));
+          filter: drop-shadow(0 4px 20px rgba(255,255,255,0.12));
           will-change: transform, background-position;
         }
 
-        /* Orbit Animations (Hardcoded radii to prevent React style variable crashes) */
-        @keyframes orbit-90 {
-          0% { transform: rotate(0deg) translateY(-90px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateY(-90px) rotate(-360deg); }
+        /* Glass Specular Glare Animation */
+        @keyframes glass-glare {
+          0% { transform: translateX(-150%) skewX(-25deg); }
+          100% { transform: translateX(150%) skewX(-25deg); }
         }
-        @keyframes orbit-140 {
-          0% { transform: rotate(0deg) translateY(-140px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateY(-140px) rotate(-360deg); }
-        }
-        @keyframes orbit-reverse-140 {
-          0% { transform: rotate(360deg) translateY(-140px) rotate(-360deg); }
-          100% { transform: rotate(0deg) translateY(-140px) rotate(0deg); }
-        }
-
-        /* Footer Gradient Sweeps */
-        @keyframes orb-move-1 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-          33% { transform: translate(25vw, -15vh) scale(1.3); opacity: 1; }
-          66% { transform: translate(-10vw, 15vh) scale(0.9); opacity: 0.7; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-        }
-        @keyframes orb-move-2 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-          33% { transform: translate(-20vw, 20vh) scale(1.2); opacity: 0.9; }
-          66% { transform: translate(25vw, -10vh) scale(1.4); opacity: 0.6; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-        }
-        @keyframes orb-move-3 {
-          0% { transform: translate(0, 0) scale(1.2); opacity: 0.7; }
-          50% { transform: translate(15vw, 15vh) scale(0.9); opacity: 1; }
-          100% { transform: translate(0, 0) scale(1.2); opacity: 0.7; }
+        .glass-specular {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.01) 20%,
+            rgba(255, 255, 255, 0.08) 40%,
+            rgba(255, 255, 255, 0.12) 50%,
+            rgba(255, 255, 255, 0.08) 60%,
+            rgba(255, 255, 255, 0.01) 80%,
+            transparent
+          );
+          animation: glass-glare 8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+          pointer-events: none;
         }
 
-        /* Flowing Beams */
+        /* Connective Laser Beams */
         @keyframes beam-flow-anim {
           from { stroke-dashoffset: 100; }
           to { stroke-dashoffset: 0; }
@@ -404,7 +384,7 @@ export default function App() {
           stroke-linecap: round;
           fill: none;
           stroke-dasharray: 15 85; 
-          animation: beam-flow-anim 2.5s linear infinite;
+          animation: beam-flow-anim 2.2s linear infinite;
         }
 
         .magic-border { position: relative; }
@@ -413,35 +393,40 @@ export default function App() {
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          padding: 1px;
-          background: linear-gradient(to bottom right, rgba(255,255,255,0.4), rgba(255,255,255,0.02), transparent);
+          padding: 1.5px;
+          background: linear-gradient(
+            to bottom right, 
+            rgba(255, 255, 255, 0.45) 0%, 
+            rgba(255, 255, 255, 0.08) 40%, 
+            rgba(255, 255, 255, 0.02) 100%
+          );
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           pointer-events: none;
         }
         .bento-card {
-          background: radial-gradient(150% 150% at 50% 0%, rgba(20,20,25,1) 0%, rgba(5,5,5,1) 100%);
+          background: radial-gradient(140% 140% at 50% 0%, rgba(18,18,22,1) 0%, rgba(3,3,4,1) 100%);
         }
       `}} />
 
-      {/* --- Dynamic Cursor Tracker Radial Ambient Aura --- */}
+      {/* --- Ambient Fluid Space Light (Tracks cursor) --- */}
       <div 
-        className="pointer-events-none fixed inset-0 z-10 opacity-30 md:opacity-45 transition-opacity duration-700"
+        className="pointer-events-none fixed inset-0 z-10 opacity-40 transition-opacity duration-1000"
         style={{
-          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.05), transparent 50%)`
+          background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.04), transparent 50%)`
         }}
       />
 
-      {/* --- Hero Background video stream --- */}
+      {/* --- Infinite Black Hole Video Backdrop --- */}
       <div className="absolute top-0 left-0 w-full h-screen z-0 overflow-hidden pointer-events-none">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-105 opacity-80">
-          <source src="/black-hole.mp4" type="video/mp4" />
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover scale-102 opacity-85">
+          <source src="https://nuratixnew.vercel.app/black-hole.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#030303]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-[#010103]"></div>
       </div>
 
-      {/* --- Cosmic Headline Text --- */}
+      {/* --- Liquid Cosmic Title Text --- */}
       <div className="absolute top-0 left-0 w-full h-screen flex flex-col justify-center items-center text-center pointer-events-none z-10">
         <motion.div 
           className="px-4"
@@ -450,47 +435,77 @@ export default function App() {
             y: headlineY 
           }}
         >
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-medium tracking-tighter leading-[0.9] mb-4">
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-semibold tracking-tighter leading-[0.9] mb-4">
             <span className="fluid-headline pb-4">
               Understand<br />The Universe
             </span>
           </h1>
+          <p className="text-white/30 text-[10px] md:text-xs tracking-[0.3em] uppercase font-light mt-3 max-w-md mx-auto">
+            Autonomous Horizon. Pure Gravity.
+          </p>
         </motion.div>
       </div>
 
-      {/* --- MASTER MULTI-MORPHING CONDUIT --- */}
+      {/* --- DYNAMIC LIQUID-GLASS MORPHING SYSTEM --- */}
       <motion.div 
-        className="fixed z-40 left-1/2 -translate-x-1/2 overflow-hidden border-b border-white/5"
+        className="fixed z-40 left-1/2 overflow-hidden"
         style={{
-          top: activeTop,
+          x: "-50%",
+          y: activeY,
           width: activeWidth,
           height: activeHeight,
           borderRadius: activeRadius,
           backgroundColor: activeBg,
-          borderBottomColor: activeBorderColor,
-          backdropFilter: `blur(20px)`,
-          boxShadow: '0 10px 45px -12px rgba(0,0,0,0.85)',
-          willChange: 'top, width, height, border-radius'
+          backdropFilter: `blur(30px) saturate(185%)`,
+          borderBottom: activeBorderBottom,
+          boxShadow: activeShadow,
+          willChange: 'transform, width, height, border-radius'
         }}
       >
-        <div className="w-full h-full flex items-center justify-between px-6 sm:px-8 md:px-12 max-w-7xl mx-auto relative transition-all duration-300">
+        {/* Animated Refraction Sweep on Surface */}
+        <motion.div className="glass-specular" style={{ opacity: glassGlareOpacity }} />
+
+        <div className="w-full h-full relative flex items-center justify-center px-6 sm:px-8 max-w-7xl mx-auto">
           
-          {/* --- LEFT ELEMENT: BRAND LOGO (Unfolds out smoothly) --- */}
+          {/* --- STATE A: PROMPT BOX (Fades and dissolves dynamically as page is scrolled) --- */}
           <motion.div 
-            className="flex items-center shrink-0 relative"
-            style={{ 
-              opacity: logoOpacity, 
-              width: logoWidth,
-              x: logoX,
+            className="absolute inset-0 flex items-center justify-between"
+            style={{
+              opacity: inputOpacity,
+              scale: inputScale,
+              pointerEvents: !isDocked ? 'auto' : 'none',
+              padding: '8px 10px 8px 24px'
+            }}
+          >
+            <input 
+              type="text" 
+              placeholder="Ask NoxyAI anything..." 
+              className="w-full bg-transparent border-none outline-none py-2 text-sm md:text-base placeholder-white/35 text-white font-normal tracking-wide" 
+            />
+            
+            {/* Glass-Beveled High-Contrast Submit Token */}
+            <button className="bg-white hover:bg-neutral-100 text-black p-3 rounded-full shrink-0 transition-transform active:scale-95 shadow-md flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5" />
+                <polyline points="5 12 12 5 19 12" />
+              </svg>
+            </button>
+          </motion.div>
+
+          {/* --- STATE B: HEADER LOGO ONLY (Unfolds cleanly in navbar position) --- */}
+          <motion.div 
+            className="flex items-center justify-center"
+            style={{
+              opacity: logoOpacity,
+              scale: logoScale,
               pointerEvents: isDocked ? 'auto' : 'none'
             }}
           >
-            <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0 filter brightness-0 invert" />
-
-            {/* Gooey Animation Effect */}
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
-              <Goo>
-                <div className="flex items-center justify-center relative w-8 h-8">
+            <Goo>
+              {/* Refined Geometric Brand Logo */}
+              <div className="flex items-center gap-3 relative">
+                {/* Gooey Animation Effect */}
+                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
                   <motion.div
                     animate={!isDocked ? {
                       x: 0,
@@ -506,88 +521,26 @@ export default function App() {
                       stiffness: 300,
                       damping: 30,
                     }}
-                    className="bg-white absolute w-3.5 h-3.5 rounded-full"
+                    className="bg-white absolute w-3 h-3 rounded-full"
                   />
                   <motion.div
-                    className="bg-white w-3.5 h-3.5 rounded-full"
+                    className="bg-white w-3 h-3 rounded-full"
                   />
                 </div>
-              </Goo>
-            </div>
-          </motion.div>
 
-          {/* --- CENTER ELEMENT: MULTI-MORPHING CONTAINER --- */}
-          <div className="flex-1 flex justify-center items-center h-full relative px-2">
-            
-            {/* STATE A: PROMPT INPUT BOX (Dissolves entirely when docking to the top) */}
-            <motion.div 
-              className="absolute inset-0 flex items-center justify-between rounded-full magic-border bg-white/[0.04] border border-white/5 hover:border-white/10"
-              style={{
-                opacity: inputOpacity,
-                scale: inputScale,
-                pointerEvents: !isDocked ? 'auto' : 'none',
-                padding: '4px 6px 4px 18px'
-              }}
-            >
-              <input 
-                type="text" 
-                placeholder="Ask NoxyAI anything..." 
-                className="w-full bg-transparent border-none outline-none py-1.5 text-xs sm:text-sm placeholder-white/40 text-white font-light tracking-wide font-mono text-left" 
-              />
-              <button className="bg-white hover:bg-neutral-200 text-black p-2 rounded-full shrink-0 transition-transform active:scale-95 shadow-md">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="19" x2="12" y2="5" />
-                  <polyline points="5 12 12 5 19 12" />
+                <svg className="w-5 h-5 text-white shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M12 2L2 12l10 10 10-10L12 2z" />
+                  <path d="M12 6l6 6-6 6-6-6 6-6z" fill="currentColor" className="opacity-20" />
                 </svg>
-              </button>
-            </motion.div>
-
-            {/* STATE B: GLOBAL NAVIGATION MENU (Smoothly scales & fades in when docked) */}
-            <motion.div 
-              className="hidden md:flex items-center gap-8 text-xs font-semibold tracking-[0.2em] uppercase text-white/50"
-              style={{
-                opacity: navOpacity,
-                y: navY,
-                scale: navScale,
-                pointerEvents: isDocked ? 'auto' : 'none'
-              }}
-            >
-              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Products</a>
-              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Solutions</a>
-              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Pricing</a>
-              <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Company</a>
-            </motion.div>
-
-          </div>
-
-          {/* --- RIGHT ELEMENT: ACTION CTA & MENU ICON (Unfolds smoothly) --- */}
-          <motion.div 
-            className="flex items-center justify-end shrink-0 gap-4"
-            style={{ 
-              opacity: rightOpacity, 
-              width: rightWidth,
-              x: rightX,
-              pointerEvents: isDocked ? 'auto' : 'none'
-            }}
-          >
-            <button className="hidden sm:inline-flex items-center px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-xs font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
-              TRY NOXYAI
-            </button>
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-              className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all shrink-0"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-            </button>
+                <span className="font-bold text-sm tracking-[0.45em] uppercase text-white font-serif">
+                  NURATIX
+                </span>
+              </div>
+            </Goo>
           </motion.div>
 
         </div>
       </motion.div>
-
       {/* --- Mobile Slide-out Navigation Drawer --- */}
       <div className={`fixed inset-0 bg-black/95 z-50 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="flex flex-col items-center justify-center h-full gap-8 text-xl font-medium relative">
