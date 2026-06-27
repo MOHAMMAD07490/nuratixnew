@@ -36,5 +36,9 @@
   },
   "optionalDependencies": {
     "lightningcss-android-arm64": "^1.32.0"
+  },
+  "overrides": {
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   }
 }
