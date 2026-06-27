@@ -623,28 +623,22 @@ export default function App() {
       {/* --- Powered By Marquee --- */}
       <section className="py-24 border-b border-white/5 bg-[#030303] overflow-hidden relative z-20">
         <p className="text-center text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold mb-12">Powered By World-Class Technologies</p>
-        <div className="flex w-[200%] md:w-[150%]">
-          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
+        <div className="flex w-max">
+          <div className="flex items-center justify-center gap-16 md:gap-24 px-8 md:px-12 animate-[marquee_20s_linear_infinite]">
             <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            
-            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/zai.png" alt="Zai" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/mistral.png" alt="Mistral" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
-          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
+          <div className="flex items-center justify-center gap-16 md:gap-24 px-8 md:px-12 animate-[marquee_20s_linear_infinite]" aria-hidden="true">
             <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-
-            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/zai.png" alt="Zai" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/mistral.png" alt="Mistral" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
         </div>
       </section>
@@ -1098,7 +1092,8 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
     if (isInView) {
       setMaxScrollY(scrollY.get());
     }
-  }, [isInView, scrollY]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInView]);
 
   return (
     <motion.div
