@@ -4,6 +4,74 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, ArrowUp, ArrowRight, Image as ImageIcon, X, Sparkles, User, Activity, Globe as GlobeIcon } from 'lucide-react';
 import WorldMap from "@/components/ui/world-map";
 import { CpuArchitecture } from "@/components/ui/cpu-architecture";
+import { CodeComparison } from "@/registry/magicui/code-comparison";
+
+const beforeCode = `import { NextRequest } from 'next/server';
+
+export const middleware = async (req: NextRequest) => {
+  let user = undefined;
+  let team = undefined;
+  const token = req.headers.get('token'); 
+
+  if(req.nextUrl.pathname.startsWith('/auth')) {
+    user = await getUserByToken(token);
+
+    if(!user) {
+      return NextResponse.redirect('/login');
+    }
+  }
+
+  if(req.nextUrl.pathname.startsWith('/team')) {
+    user = await getUserByToken(token);
+
+    if(!user) {
+      return NextResponse.redirect('/login');
+    }
+
+    const slug = req.nextUrl.query.slug;
+    team = await getTeamBySlug(slug); // [!code highlight]
+
+    if(!team) { // [!code highlight]
+      return NextResponse.redirect('/'); // [!code highlight]
+    } // [!code highlight]
+  } // [!code highlight]
+
+  return NextResponse.next(); // [!code highlight]
+}
+
+export const config = {
+  matcher: ['/((?!_next/|_static|_vercel|[\\w-]+\\.\\w+).*)'], // [!code highlight]
+};`
+
+const afterCode = `import { createMiddleware, type MiddlewareFunctionProps } from '@app/(auth)/auth/_middleware';
+import { auth } from '@/app/(auth)/auth/_middleware'; // [!code --]
+import { auth } from '@/app/(auth)/auth/_middleware'; // [!code ++]
+import { team } from '@/app/(team)/team/_middleware';
+
+const middlewares = {
+  '/auth{/:path?}': auth,
+  '/team{/:slug?}': [ auth, team ],
+};
+
+export const middleware = createMiddleware(middlewares); // [!code focus]
+
+export const config = {
+  matcher: ['/((?!_next/|_static|_vercel|[\\w-]+\\.\\w+).*)'],
+};`
+
+function CodeComparisonDemo() {
+  return (
+    <CodeComparison
+      beforeCode={beforeCode}
+      afterCode={afterCode}
+      language="typescript"
+      filename="middleware.ts"
+      lightTheme="github-light"
+      darkTheme="github-dark"
+      highlightColor="rgba(101, 117, 133, 0.16)"
+    />
+  )
+}
 
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
@@ -125,7 +193,7 @@ export default function App() {
       `}} />
 
       {/* --- Navigation --- */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black/70 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+      <nav className="fixed top-0 w-full z-50 bg-[#030303] border-b border-white/5 py-4">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer group">
             <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7 group-hover:opacity-80 transition-opacity" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -259,123 +327,58 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- Connect Google Workspace (Animated Beams UI) --- */}
-      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <div className="flex items-center gap-2 text-sm text-blue-400 mb-6 font-medium tracking-wide">
-              <Activity size={16} /> Connect Apps
-            </div>
-            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">Connect your Google Workspace with NoxyAI</h2>
-            <p className="text-gray-400 text-lg leading-relaxed mb-8">
-              Deploy intelligent agents that securely connect to your workspace. Search through Gmail, Google Sheets, and Google Drive to synthesize answers in real-time.
-            </p>
-          </div>
-
-          {/* Absolute Positioned Beam Visualizer */}
-          <div className="relative w-full h-[350px] md:h-[450px] flex items-center justify-center rounded-3xl overflow-hidden magic-border bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)]">
-            
-            <svg className="absolute inset-0 w-full h-full z-0 pointer-events-none" preserveAspectRatio="none">
-              <defs>
-                <filter id="beam-glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* Static faint paths */}
-              <path d="M 20% 20% L 50% 50%" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
-              <path d="M 20% 50% L 50% 50%" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
-              <path d="M 20% 80% L 50% 50%" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
-              <path d="M 50% 50% L 80% 50%" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
-
-              {/* Glowing animated white paths */}
-              <path d="M 20% 20% L 50% 50%" pathLength="100" className="animated-beam-glow" filter="url(#beam-glow)" style={{ animationDelay: '0s' }} />
-              <path d="M 20% 50% L 50% 50%" pathLength="100" className="animated-beam-glow" filter="url(#beam-glow)" style={{ animationDelay: '1.2s' }} />
-              <path d="M 20% 80% L 50% 50%" pathLength="100" className="animated-beam-glow" filter="url(#beam-glow)" style={{ animationDelay: '2.4s' }} />
-              <path d="M 50% 50% L 80% 50%" pathLength="100" className="animated-beam-glow" filter="url(#beam-glow)" style={{ animationDelay: '0.6s' }} />
-            </svg>
-
-            {/* Floating Nodes */}
-            <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
-              
-              {/* Drive Node */}
-              <div className="absolute left-[20%] top-[20%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full border border-white/20 bg-[#0A0A0A] p-3 md:p-4 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                <img src="https://www.noxyai.com/google-drive.png" alt="Drive" className="w-full h-full object-contain brightness-0 invert" />
-              </div>
-
-              {/* Sheets Node */}
-              <div className="absolute left-[20%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full border border-white/20 bg-[#0A0A0A] p-3 md:p-4 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                <img src="https://www.noxyai.com/google-sheets.png" alt="Sheets" className="w-full h-full object-contain brightness-0 invert" />
-              </div>
-
-              {/* Gmail Node */}
-              <div className="absolute left-[20%] top-[80%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full border border-white/20 bg-[#0A0A0A] p-3 md:p-4 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                <img src="https://www.noxyai.com/gmail.png" alt="Gmail" className="w-full h-full object-contain brightness-0 invert" />
-              </div>
-
-              {/* Center NoxyAI Node */}
-              <div className="absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full border border-white/30 bg-[#050505] p-5 shadow-[0_0_30px_rgba(255,255,255,0.15)] pointer-events-auto">
-                <img src={noxyaiLogo} alt="NoxyAI" className="w-full h-full object-contain brightness-0 invert drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
-              </div>
-
-              {/* Output User Node */}
-              <div className="absolute left-[80%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full border border-white/20 bg-[#111111] shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                <User className="text-white w-6 h-6 md:w-8 md:h-8" />
-              </div>
-
-            </div>
-          </div>
+      {/* --- Code Refactoring / Middleware Comparison Section --- */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 text-center flex flex-col items-center">
+        <p className="text-xs tracking-[0.2em] text-blue-400 mb-6 font-mono uppercase">[ REFACTORING ]</p>
+        <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">Refactor code in seconds</h2>
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-16">
+          Compare how NoxyAI refactors complex legacy middleware setups into highly modular, developer-friendly codebases.
+        </p>
+        <div className="w-full">
+          <CodeComparisonDemo />
         </div>
       </section>
 
       {/* --- World Map / Global Reach Section --- */}
-      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
-        <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-16 items-center">
-          <div>
-            <div className="flex items-center gap-2 text-sm text-blue-400 mb-6 font-medium tracking-wide uppercase">
-              <GlobeIcon size={16} /> Active in 120+ countries worldwide
-            </div>
-            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">Trusted by teams at rapidly growing startups.</h2>
-            <p className="text-gray-400 text-lg leading-relaxed mb-8">
-              Developers choose our AI agents to accelerate development. Join the global movement toward intelligent coding. Trusted by teams in hubs like <span className="text-white font-medium">India</span>, <span className="text-white font-medium">Dubai</span>, and the <span className="text-white font-medium">USA</span>.
-            </p>
-          </div>
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 text-center flex flex-col items-center">
+        <div className="inline-flex items-center justify-center gap-2 text-sm text-white mb-6 font-mono tracking-wider">
+          <span>[Active in 120+ countries worldwide]</span>
+        </div>
+        <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">Trusted by teams at rapidly growing startups.</h2>
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed mb-12">
+          Developers choose our AI agents to accelerate development. Join the global movement toward intelligent coding. Trusted by teams in hubs like <span className="text-white font-medium">India</span>, <span className="text-white font-medium">Dubai</span>, and the <span className="text-white font-medium">USA</span>.
+        </p>
 
-          <div className="w-full flex flex-col items-center justify-center scale-105">
-            <WorldMap
-              lineColor="#00ff66"
-              dots={[
-                {
-                  start: { lat: 64.2008, lng: -149.4937 }, // Alaska
-                  end: { lat: 34.0522, lng: -118.2437 }, // LA
-                },
-                {
-                  start: { lat: 64.2008, lng: -149.4937 },
-                  end: { lat: -15.7975, lng: -47.8919 }, // Brazil
-                },
-                {
-                  start: { lat: -15.7975, lng: -47.8919 },
-                  end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
-                },
-                {
-                  start: { lat: 51.5074, lng: -0.1278 }, // London
-                  end: { lat: 28.6139, lng: 77.209 }, // New Delhi
-                },
-                {
-                  start: { lat: 28.6139, lng: 77.209 },
-                  end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
-                },
-                {
-                  start: { lat: 28.6139, lng: 77.209 },
-                  end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
-                },
-              ]}
-            />
-          </div>
+        <div className="w-full flex flex-col items-center justify-center scale-105">
+          <WorldMap
+            lineColor="#00ff66"
+            dots={[
+              {
+                start: { lat: 64.2008, lng: -149.4937 }, // Alaska
+                end: { lat: 34.0522, lng: -118.2437 }, // LA
+              },
+              {
+                start: { lat: 64.2008, lng: -149.4937 },
+                end: { lat: -15.7975, lng: -47.8919 }, // Brazil
+              },
+              {
+                start: { lat: -15.7975, lng: -47.8919 },
+                end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
+              },
+              {
+                start: { lat: 51.5074, lng: -0.1278 }, // London
+                end: { lat: 28.6139, lng: 77.209 }, // New Delhi
+              },
+              {
+                start: { lat: 28.6139, lng: 77.209 },
+                end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
+              },
+              {
+                start: { lat: 28.6139, lng: 77.209 },
+                end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
+              },
+            ]}
+          />
         </div>
       </section>
 
