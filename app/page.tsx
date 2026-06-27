@@ -321,7 +321,7 @@ export default function App() {
 
       {/* --- World Map / Global Reach Section --- */}
       <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-16 items-center">
           <div>
             <div className="flex items-center gap-2 text-sm text-blue-400 mb-6 font-medium tracking-wide uppercase">
               <GlobeIcon size={16} /> Active in 120+ countries worldwide
@@ -332,7 +332,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="relative w-full flex flex-col items-center justify-center overflow-hidden rounded-3xl magic-border">
+          <div className="relative w-full flex flex-col items-center justify-center overflow-hidden rounded-3xl magic-border scale-105">
             <WorldMap
               dots={[
                 {
