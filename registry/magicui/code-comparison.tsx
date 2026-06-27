@@ -89,7 +89,7 @@ export function CodeComparison({
         <div
           style={{ "--highlight-color": highlightColor } as React.CSSProperties}
           className={cn(
-            "bg-background h-full w-full overflow-auto font-mono text-xs text-left",
+            "bg-black h-full w-full overflow-auto font-mono text-xs text-left",
             "[&>pre]:h-full [&>pre]:w-full [&>pre]:py-4 [&>pre]:bg-transparent!",
             "[&>pre>code]:inline-block! [&>pre>code]:w-full!",
             "[&>pre>code>span]:inline-block! [&>pre>code>span]:w-full [&>pre>code>span]:px-4 [&>pre>code>span]:py-0.5",
@@ -105,7 +105,7 @@ export function CodeComparison({
       );
     } else {
       return (
-        <pre className="bg-background text-foreground h-full overflow-auto p-4 font-mono text-xs text-left break-all">
+        <pre className="bg-black text-foreground h-full overflow-auto p-4 font-mono text-xs text-left break-all">
           <code>{code}</code>
         </pre>
       );
@@ -114,7 +114,7 @@ export function CodeComparison({
 
   return (
     <div className="mx-auto w-full max-w-5xl">
-      <div className="group border-zinc-800 relative w-full overflow-hidden rounded-xl border bg-zinc-950">
+      <div className="group border-zinc-800 relative w-full overflow-hidden rounded-xl border bg-black">
         <div className="relative grid md:grid-cols-2">
           <div
             className={cn(
@@ -124,7 +124,7 @@ export function CodeComparison({
               "[&>div>pre>code>:not(.focused)]:transition-all [&>div>pre>code>:not(.focused)]:duration-300"
             )}
           >
-            <div className="border-zinc-800 bg-zinc-900/50 text-gray-300 flex items-center border-b p-3 text-xs font-medium">
+            <div className="border-zinc-800 bg-black text-gray-300 flex items-center border-b p-3 text-xs font-medium">
               <FileIcon className="mr-2 h-3.5 w-3.5" />
               {filename}
               <span className="ml-auto hidden md:block text-zinc-500 uppercase tracking-wider text-[10px]">before</span>
@@ -139,7 +139,7 @@ export function CodeComparison({
               "[&>div>pre>code>:not(.focused)]:transition-all [&>div>pre>code>:not(.focused)]:duration-300"
             )}
           >
-            <div className="border-zinc-800 bg-zinc-900/50 text-gray-300 flex items-center border-b p-3 text-xs font-medium">
+            <div className="border-zinc-800 bg-black text-gray-300 flex items-center border-b p-3 text-xs font-medium">
               <FileIcon className="mr-2 h-3.5 w-3.5" />
               {filename}
               <span className="ml-auto hidden md:block text-zinc-500 uppercase tracking-wider text-[10px]">after</span>
@@ -147,7 +147,7 @@ export function CodeComparison({
             {renderCode(afterCode, highlightedAfter)}
           </div>
         </div>
-        <div className="border-zinc-800 bg-zinc-900 text-zinc-400 absolute top-1/2 left-1/2 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border text-xs font-semibold md:flex shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <div className="border-zinc-800 bg-black text-zinc-400 absolute top-1/2 left-1/2 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border text-xs font-semibold md:flex shadow-[0_0_15px_rgba(0,0,0,0.5)]">
           VS
         </div>
       </div>

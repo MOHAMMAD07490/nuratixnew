@@ -5,6 +5,8 @@ import { Menu, ArrowUp, ArrowRight, Image as ImageIcon, X, Sparkles, User, Activ
 import WorldMap from "@/components/ui/world-map";
 import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 import { CodeComparison } from "@/registry/magicui/code-comparison";
+import { DotPattern } from "@/components/ui/dot-pattern";
+import { cn } from "@/lib/utils";
 
 const beforeCode = `import { NextRequest } from 'next/server';
 
@@ -71,6 +73,114 @@ function CodeComparisonDemo() {
       highlightColor="rgba(101, 117, 133, 0.16)"
     />
   )
+}
+
+function PromptToCodeDemo() {
+  const [step, setStep] = useState(0);
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
+  
+  const targetInput = "easily add animation, generate landing page";
+  const targetOutput = `import { motion } from "motion/react";
+
+export function AnimatedLanding() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="p-12 text-center bg-black border border-white/10 rounded-2xl"
+    >
+      <h1 className="text-white text-3xl font-mono">[GENERATE LANDING PAGE]</h1>
+      <p className="text-gray-400 mt-4">AI generated code is done.</p>
+    </motion.div>
+  );
+}`;
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (step === 0) {
+      setInputText("");
+      setOutputText("");
+      timer = setTimeout(() => setStep(1), 1000);
+    } else if (step === 1) {
+      if (inputText.length < targetInput.length) {
+        timer = setTimeout(() => {
+          setInputText(targetInput.slice(0, inputText.length + 1));
+        }, 50);
+      } else {
+        timer = setTimeout(() => setStep(2), 800);
+      }
+    } else if (step === 2) {
+      timer = setTimeout(() => setStep(3), 600);
+    } else if (step === 3) {
+      if (outputText.length < targetOutput.length) {
+        timer = setTimeout(() => {
+          setOutputText(targetOutput.slice(0, outputText.length + 8));
+        }, 12);
+      } else {
+        timer = setTimeout(() => setStep(4), 4000);
+      }
+    } else if (step === 4) {
+      timer = setTimeout(() => setStep(0), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [step, inputText, outputText]);
+
+  return (
+    <div className="mx-auto w-full max-w-4xl relative">
+      <div className="w-full rounded-xl border border-zinc-800 bg-black overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-4 py-3">
+          <div className="flex gap-2">
+            <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
+            <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+            <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
+          </div>
+          <span className="text-[10px] font-mono text-zinc-500 tracking-wider">noxyai-generator.sh</span>
+          <div className="w-10"></div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="flex items-center gap-3 border border-zinc-800 rounded-lg p-3 bg-zinc-950/50">
+            <span className="text-zinc-500 font-mono text-sm">prompt$</span>
+            <div className="flex-1 font-mono text-sm text-white min-h-[20px] text-left relative">
+              {inputText}
+              {step === 1 && (
+                <span className="inline-block w-1.5 h-4 bg-white ml-0.5 animate-pulse"></span>
+              )}
+            </div>
+            <button 
+              className={cn(
+                "px-4 py-1.5 rounded-md font-mono text-xs transition-all duration-300 font-semibold",
+                step >= 2 ? "bg-white text-black scale-95 shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "bg-zinc-800 text-zinc-500"
+              )}
+            >
+              [SEND]
+            </button>
+          </div>
+
+          {step >= 3 && (
+            <div className="border border-zinc-800 rounded-lg bg-black overflow-hidden flex flex-col">
+              <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] font-mono text-zinc-500">
+                <span>OUTPUT: GENERATED CODE</span>
+                {outputText.length === targetOutput.length && (
+                  <span className="text-emerald-500 font-bold animate-pulse">✨ DONE</span>
+                )}
+              </div>
+              <pre className="p-4 overflow-x-auto text-left font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap min-h-[240px]">
+                <code>
+                  {outputText}
+                  {outputText.length < targetOutput.length && (
+                    <span className="inline-block w-1.5 h-4 bg-emerald-500 ml-0.5 animate-pulse"></span>
+                  )}
+                </code>
+              </pre>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // --- Custom Node Component for Animated Beams ---
@@ -328,14 +438,40 @@ export default function App() {
       </section>
 
       {/* --- Code Refactoring / Middleware Comparison Section --- */}
-      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 text-center flex flex-col items-center">
-        <p className="text-xs tracking-[0.2em] text-blue-400 mb-6 font-mono uppercase">[ REFACTORING ]</p>
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5 text-center flex flex-col items-center bg-black text-white">
         <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">Refactor code in seconds</h2>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-16">
-          Compare how NoxyAI refactors complex legacy middleware setups into highly modular, developer-friendly codebases.
+          Compare how NoxyAI refactors complex legacy middleware setups into highly modular, developer-friendly codebase.
         </p>
         <div className="w-full">
           <CodeComparisonDemo />
+        </div>
+      </section>
+
+      {/* --- Prompt to Code Section with Dot Pattern --- */}
+      <section className="relative w-full border-t border-white/5 bg-black py-24 overflow-hidden">
+        {/* DotPattern Background */}
+        <DotPattern
+          width={24}
+          height={24}
+          glow={true}
+          className="opacity-20 text-zinc-700"
+        />
+        
+        {/* Gradient Mask for fading dot pattern edges */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
+          <div className="inline-flex items-center justify-center gap-2 text-sm text-white mb-6 font-mono tracking-wider">
+            <span>[CODE WITH PROMPT]</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4 text-white">Generate with natural language</h2>
+          <p className="text-zinc-400 text-lg max-w-2xl mx-auto mb-16">
+            Easily add animations, generate landing pages, click send, and watch the AI write production-ready code in seconds.
+          </p>
+          <div className="w-full">
+            <PromptToCodeDemo />
+          </div>
         </div>
       </section>
 
@@ -386,8 +522,8 @@ export default function App() {
       <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="flex items-center gap-2 text-sm text-gray-500 mb-6 font-semibold tracking-[0.2em] uppercase">
-              <Sparkles size={16} /> POWERED BY WORLD-CLASS AI MODELS
+            <div className="inline-flex items-center justify-center gap-2 text-sm text-white mb-6 font-mono tracking-wider">
+              <span>[POWERED BY WORLD-CLASS AI MODELS]</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-6">Cosmic Intelligence, In Depth</h2>
             <p className="text-gray-400 text-lg leading-relaxed mb-8">
