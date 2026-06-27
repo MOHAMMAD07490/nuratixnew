@@ -215,8 +215,8 @@ const CircleNode: React.FC<CircleNodeProps> = ({ className, children, style }) =
 
 
 export default function App() {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDocked, setIsDocked] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -229,58 +229,86 @@ export default function App() {
   const nuratixLogo = "https://nuratix.com/logo.png";
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
+  const [dimensions, setDimensions] = useState({
+    startWidth: 512,
+    targetWidth: 1200,
+    startTop: 440,
+    targetTop: 10,
+    targetHeight: 76,
+  });
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     setWindowWidth(window.innerWidth);
     setWindowHeight(window.innerHeight);
 
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
+    const updateDimensions = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const isDesktop = width >= 768;
+      
+      setWindowWidth(width);
+      setWindowHeight(height);
+      setDimensions({
+        startWidth: isDesktop ? 512 : width * 0.92,
+        targetWidth: width,
+        startTop: isDesktop ? height * 0.55 : height * 0.50,
+        targetTop: 10,
+        targetHeight: isDesktop ? 76 : 64,
+      });
     };
 
+    updateDimensions();
+
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // Complete the entire morph animation smoothly over the first 40% of viewport height
-      const threshold = window.innerHeight * 0.40;
-      const factor = Math.min(Math.max(scrollY / threshold, 0), 1);
-      setScrollProgress(factor);
+      setIsDocked(window.scrollY > 80);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('resize', updateDimensions);
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', updateDimensions);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
-  // Responsive mathematical geometry for the morphing container
   const isDesktop = windowWidth >= 768;
-  
-  // Outer dimensions of the morphing capsule
-  const startWidth = isDesktop ? 512 : windowWidth * 0.92;
-  const targetWidth = windowWidth;
-  const activeWidth = startWidth + (targetWidth - startWidth) * scrollProgress;
+  const { scrollY } = useScroll();
 
-  const startHeight = 60;
-  const targetHeight = isDesktop ? 76 : 64;
-  const activeHeight = startHeight + (targetHeight - startHeight) * scrollProgress;
+  // Morph values linked natively to scrollY
+  const activeWidth = useTransform(scrollY, [0, 120], [dimensions.startWidth, dimensions.targetWidth]);
+  const activeHeight = useTransform(scrollY, [0, 120], [60, dimensions.targetHeight]);
+  const activeTop = useTransform(scrollY, [0, 120], [dimensions.startTop, dimensions.targetTop]);
+  const activeRadius = useTransform(scrollY, [0, 120], [30, 0]);
+  const activeBg = useTransform(scrollY, [0, 120], ["rgba(10, 10, 10, 0.4)", "rgba(10, 10, 10, 0.85)"]);
+  const activeBorderColor = useTransform(scrollY, [0, 120], ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.08)"]);
 
-  // Vertical position translation
-  const startTop = isDesktop ? 55 : 50; // top offset in % of viewport height
-  const activeTop = `calc(${startTop * (1 - scrollProgress)}vh + ${10 * scrollProgress}px)`; 
+  // Inner element morph styles
+  const logoWidth = useTransform(scrollY, [0, 60, 120], [0, 50, isDesktop ? 140 : 90]);
+  const logoOpacity = useTransform(scrollY, [0, 60, 120], [0, 0.5, 1]);
+  const logoX = useTransform(scrollY, [0, 120], [-25, 0]);
 
-  // Smooth capsule-to-navbar flat layout transition
-  const activeRadius = 30 * (1 - scrollProgress);
+  const inputOpacity = useTransform(scrollY, [0, 50], [1, 0]);
+  const inputScale = useTransform(scrollY, [0, 50], [1, 0.88]);
+
+  const navOpacity = useTransform(scrollY, [60, 100], [0, 1]);
+  const navY = useTransform(scrollY, [60, 100], [15, 0]);
+  const navScale = useTransform(scrollY, [60, 100], [0.85, 1]);
+
+  const rightWidth = useTransform(scrollY, [0, 60, 120], [0, 50, isDesktop ? 175 : 50]);
+  const rightOpacity = useTransform(scrollY, [0, 60, 120], [0, 0.5, 1]);
+  const rightX = useTransform(scrollY, [0, 120], [25, 0]);
+
+  const headlineOpacity = useTransform(scrollY, [0, 90], [1, 0]);
+  const headlineY = useTransform(scrollY, [0, 90], [0, -65]);
 
   return (
     <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/30 overflow-x-hidden relative">
@@ -415,11 +443,11 @@ export default function App() {
 
       {/* --- Cosmic Headline Text --- */}
       <div className="absolute top-0 left-0 w-full h-screen flex flex-col justify-center items-center text-center pointer-events-none z-10">
-        <div 
-          className="transition-all duration-500 ease-out px-4"
+        <motion.div 
+          className="px-4"
           style={{ 
-            opacity: 1 - scrollProgress * 1.8, 
-            transform: `translateY(-${scrollProgress * 65}px)` 
+            opacity: headlineOpacity, 
+            y: headlineY 
           }}
         >
           <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-medium tracking-tighter leading-[0.9] mb-4">
@@ -427,37 +455,34 @@ export default function App() {
               Understand<br />The Universe
             </span>
           </h1>
-          <p className="text-white/35 text-[10px] md:text-xs tracking-[0.25em] uppercase font-light mt-3 max-w-md mx-auto">
-            Autonomous Logic. Pure Refinement.
-          </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* --- MASTER MULTI-MORPHING CONDUIT --- */}
-      <div 
-        className="fixed z-40 left-1/2 -translate-x-1/2 overflow-hidden"
+      <motion.div 
+        className="fixed z-40 left-1/2 -translate-x-1/2 overflow-hidden border-b border-white/5"
         style={{
           top: activeTop,
-          width: `${activeWidth}px`,
-          height: `${activeHeight}px`,
-          borderRadius: `${activeRadius}px`,
-          backgroundColor: `rgba(10, 10, 10, ${0.40 + scrollProgress * 0.45})`,
-          backdropFilter: `blur(${14 + scrollProgress * 14}px)`,
-          borderBottom: `1px solid rgba(255, 255, 255, ${scrollProgress * 0.08})`,
-          boxShadow: scrollProgress > 0.1 ? '0 10px 45px -12px rgba(0,0,0,0.85)' : '0 15px 40px -8px rgba(0,0,0,0.45)',
+          width: activeWidth,
+          height: activeHeight,
+          borderRadius: activeRadius,
+          backgroundColor: activeBg,
+          borderBottomColor: activeBorderColor,
+          backdropFilter: `blur(20px)`,
+          boxShadow: '0 10px 45px -12px rgba(0,0,0,0.85)',
           willChange: 'top, width, height, border-radius'
         }}
       >
         <div className="w-full h-full flex items-center justify-between px-6 sm:px-8 md:px-12 max-w-7xl mx-auto relative transition-all duration-300">
           
           {/* --- LEFT ELEMENT: BRAND LOGO (Unfolds out smoothly) --- */}
-          <div 
-            className="flex items-center shrink-0 transition-all duration-300 ease-out relative"
+          <motion.div 
+            className="flex items-center shrink-0 relative"
             style={{ 
-              opacity: scrollProgress, 
-              width: scrollProgress > 0.2 ? (isDesktop ? '140px' : '90px') : '0px',
-              transform: `translateX(${(1 - scrollProgress) * -25}px)`,
-              pointerEvents: scrollProgress > 0.4 ? 'auto' : 'none'
+              opacity: logoOpacity, 
+              width: logoWidth,
+              x: logoX,
+              pointerEvents: isDocked ? 'auto' : 'none'
             }}
           >
             <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0 filter brightness-0 invert" />
@@ -467,7 +492,7 @@ export default function App() {
               <Goo>
                 <div className="flex items-center justify-center relative w-8 h-8">
                   <motion.div
-                    animate={scrollProgress < 0.6 ? {
+                    animate={!isDocked ? {
                       x: 0,
                       scale: 1,
                       borderRadius: 40,
@@ -489,18 +514,18 @@ export default function App() {
                 </div>
               </Goo>
             </div>
-          </div>
+          </motion.div>
 
           {/* --- CENTER ELEMENT: MULTI-MORPHING CONTAINER --- */}
           <div className="flex-1 flex justify-center items-center h-full relative px-2">
             
             {/* STATE A: PROMPT INPUT BOX (Dissolves entirely when docking to the top) */}
-            <div 
-              className="absolute inset-0 flex items-center justify-between transition-all duration-300 rounded-full magic-border bg-white/[0.04] border border-white/5 hover:border-white/10"
+            <motion.div 
+              className="absolute inset-0 flex items-center justify-between rounded-full magic-border bg-white/[0.04] border border-white/5 hover:border-white/10"
               style={{
-                opacity: Math.max(0, 1 - scrollProgress * 2.5),
-                transform: `scale(${1 - scrollProgress * 0.12})`,
-                pointerEvents: scrollProgress > 0.35 ? 'none' : 'auto',
+                opacity: inputOpacity,
+                scale: inputScale,
+                pointerEvents: !isDocked ? 'auto' : 'none',
                 padding: '4px 6px 4px 18px'
               }}
             >
@@ -515,33 +540,34 @@ export default function App() {
                   <polyline points="5 12 12 5 19 12" />
                 </svg>
               </button>
-            </div>
+            </motion.div>
 
             {/* STATE B: GLOBAL NAVIGATION MENU (Smoothly scales & fades in when docked) */}
-            <div 
-              className="hidden md:flex items-center gap-8 text-xs font-semibold tracking-[0.2em] uppercase text-white/50 transition-all duration-500 ease-out"
+            <motion.div 
+              className="hidden md:flex items-center gap-8 text-xs font-semibold tracking-[0.2em] uppercase text-white/50"
               style={{
-                opacity: scrollProgress,
-                transform: `translateY(${(1 - scrollProgress) * 15}px) scale(${0.85 + scrollProgress * 0.15})`,
-                pointerEvents: scrollProgress > 0.7 ? 'auto' : 'none'
+                opacity: navOpacity,
+                y: navY,
+                scale: navScale,
+                pointerEvents: isDocked ? 'auto' : 'none'
               }}
             >
               <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Products</a>
               <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Solutions</a>
               <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Pricing</a>
               <a href="#" className="hover:text-white hover:tracking-[0.25em] transition-all duration-300">Company</a>
-            </div>
+            </motion.div>
 
           </div>
 
           {/* --- RIGHT ELEMENT: ACTION CTA & MENU ICON (Unfolds smoothly) --- */}
-          <div 
-            className="flex items-center justify-end shrink-0 transition-all duration-300 ease-out gap-4"
+          <motion.div 
+            className="flex items-center justify-end shrink-0 gap-4"
             style={{ 
-              opacity: scrollProgress, 
-              width: scrollProgress > 0.2 ? (isDesktop ? '175px' : '50px') : '0px',
-              transform: `translateX(${(1 - scrollProgress) * 25}px)`,
-              pointerEvents: scrollProgress > 0.4 ? 'auto' : 'none'
+              opacity: rightOpacity, 
+              width: rightWidth,
+              x: rightX,
+              pointerEvents: isDocked ? 'auto' : 'none'
             }}
           >
             <button className="hidden sm:inline-flex items-center px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-xs font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
@@ -557,10 +583,10 @@ export default function App() {
                 <line x1="4" x2="20" y1="18" y2="18" />
               </svg>
             </button>
-          </div>
+          </motion.div>
 
         </div>
-      </div>
+      </motion.div>
 
       {/* --- Mobile Slide-out Navigation Drawer --- */}
       <div className={`fixed inset-0 bg-black/95 z-50 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
