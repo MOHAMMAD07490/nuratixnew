@@ -888,7 +888,7 @@ export default function App() {
             <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-16">AI for all humanity</h2>
             <div className="space-y-6 max-w-md">
               <h3 className="text-3xl font-medium">NoxyAI</h3>
-              <p className="text-gray-400 text-lg leading-relaxed">NoxyAI is your cosmic guide, now accessible on web, iOS, and Android. Explore the universe with AI.</p>
+              <p className="text-gray-400 text-lg leading-relaxed">NoxyAI is an advanced multi-agent AI platform combining chat, image generation, voice AI, real-time search, coding, custom avatars, and an OpenAI-compatible API.</p>
             </div>
           </div>
           <div className="relative mt-8 lg:mt-0">
