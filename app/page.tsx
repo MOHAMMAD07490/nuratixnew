@@ -321,7 +321,7 @@ export default function App() {
 
       {/* --- Navigation --- */}
       <nav className="fixed top-0 w-full z-50 bg-[#030303] border-b border-white/5 py-4">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between relative">
           <div className="flex items-center gap-2 cursor-pointer group relative">
             <div className="relative z-10">
               <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7 group-hover:opacity-80 transition-opacity" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -355,6 +355,37 @@ export default function App() {
               </Goo>
             </div>
           </div>
+
+          {/* Docking Search Input box that appears on scroll */}
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.8 }}
+            animate={scrollY >= 80 ? {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            } : {
+              opacity: 0,
+              y: -20,
+              scale: 0.8,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+            }}
+            className="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 max-w-xs w-64 absolute left-1/2 -translate-x-1/2"
+          >
+            <input
+              type="text"
+              placeholder="Ask anything..."
+              className="w-full bg-transparent border-none outline-none text-xs text-white placeholder-white/30 font-mono"
+              readOnly
+            />
+            <button className="bg-white text-black p-1.5 rounded-full flex-shrink-0 hover:scale-105 transition-transform">
+              <ArrowUp size={12} strokeWidth={3} />
+            </button>
+          </motion.div>
+
           <div className="flex items-center gap-4">
             <button className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium">
               TRY NOXYAI
@@ -392,14 +423,21 @@ export default function App() {
               Understand<br />The Universe
             </span>
           </h1>
-          <div className="w-full max-w-md mx-auto group">
+          <motion.div 
+            style={{
+              opacity: Math.max(0, 1 - scrollY / 150),
+              transform: `perspective(1000px) rotateX(${Math.min(25, scrollY / 6)}deg) translateY(${-scrollY * 0.9}px) scale(${Math.max(0.6, 1 - scrollY / 300)})`,
+              transformStyle: "preserve-3d" as const,
+            }}
+            className="w-full max-w-md mx-auto group"
+          >
             <div className="relative magic-border bg-white/5 backdrop-blur-xl rounded-[2rem] p-2 flex items-center transition-all duration-300 group-hover:bg-white/10 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
               <input type="text" placeholder="Ask anything..." className="w-full bg-transparent border-none outline-none px-6 py-3 text-lg placeholder-white/40 text-white" />
               <button className="bg-white text-black p-3 rounded-full hover:scale-105 transition-transform flex-shrink-0">
                 <ArrowUp size={24} strokeWidth={2.5} />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
