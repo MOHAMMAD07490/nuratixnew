@@ -387,6 +387,20 @@ export default function App() {
           animation: beam-flow-anim 2.2s linear infinite;
         }
 
+        /* Orbit Animations (Hardcoded radii to prevent React style variable crashes) */
+        @keyframes orbit-90 {
+          0% { transform: rotate(0deg) translateY(-90px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateY(-90px) rotate(-360deg); }
+        }
+        @keyframes orbit-140 {
+          0% { transform: rotate(0deg) translateY(-140px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateY(-140px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse-140 {
+          0% { transform: rotate(360deg) translateY(-140px) rotate(-360deg); }
+          100% { transform: rotate(0deg) translateY(-140px) rotate(0deg); }
+        }
+
         .magic-border { position: relative; }
         .magic-border::before {
           content: "";
@@ -497,30 +511,9 @@ export default function App() {
           </motion.div>
 
           {/* --- STATE B: DOCKED HEADER CONTROLS --- */}
-          {/* LEFT ELEMENT: 3-slash Navigation Button */}
+          {/* LEFT ELEMENT: NURATIX Logo png (with Gooey Split/Merge response) */}
           <motion.div 
-            className="flex items-center justify-start shrink-0"
-            style={{
-              opacity: logoOpacity,
-              scale: logoScale,
-              pointerEvents: isDocked ? 'auto' : 'none'
-            }}
-          >
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:scale-105 active:scale-95 transition-all text-white flex items-center justify-center shadow-lg"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-            </button>
-          </motion.div>
-
-          {/* RIGHT ELEMENT: NURATIX Logo (with Gooey Split/Merge response next to it) */}
-          <motion.div 
-            className="flex items-center justify-end shrink-0"
+            className="flex items-center justify-start shrink-0 relative"
             style={{
               opacity: logoOpacity,
               scale: logoScale,
@@ -529,15 +522,17 @@ export default function App() {
           >
             <Goo>
               <div className="flex items-center gap-3 relative">
+                <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0 filter brightness-0 invert" />
+
                 {/* Gooey Animation Effect */}
-                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 flex items-center pointer-events-none z-0">
+                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
                   <motion.div
                     animate={!isDocked ? {
                       x: 0,
                       scale: 1,
                       borderRadius: 40,
                     } : {
-                      x: -20,
+                      x: 20,
                       scale: [1, 1.2, 0.8, 0],
                       borderRadius: 40,
                     }}
@@ -552,16 +547,36 @@ export default function App() {
                     className="bg-white w-3 h-3 rounded-full"
                   />
                 </div>
-
-                <svg className="w-5 h-5 text-white shrink-0 z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 2L2 12l10 10 10-10L12 2z" />
-                  <path d="M12 6l6 6-6 6-6-6 6-6z" fill="currentColor" className="opacity-20" />
-                </svg>
-                <span className="font-bold text-sm tracking-[0.45em] uppercase text-white font-serif z-10">
-                  NURATIX
-                </span>
               </div>
             </Goo>
+          </motion.div>
+
+          {/* RIGHT ELEMENT: Navigation Bar & CTA */}
+          <motion.div 
+            className="flex items-center justify-end gap-6 md:gap-8 text-xs font-semibold tracking-[0.2em] uppercase text-white/50"
+            style={{
+              opacity: logoOpacity,
+              scale: logoScale,
+              pointerEvents: isDocked ? 'auto' : 'none'
+            }}
+          >
+            <a href="#" className="hover:text-white transition-colors duration-300">Products</a>
+            <a href="#" className="hover:text-white transition-colors duration-300">Solutions</a>
+            <a href="#" className="hover:text-white transition-colors duration-300">Pricing</a>
+            <a href="#" className="hover:text-white transition-colors duration-300">Company</a>
+            <button className="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-[10px] font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
+              TRY NOXYAI
+            </button>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+            </button>
           </motion.div>
 
         </div>
