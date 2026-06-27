@@ -886,10 +886,21 @@ export default function App() {
       <section className="max-w-7xl mx-auto px-6 py-24 text-center border-t border-white/5">
         <div className="flex flex-col items-center gap-12">
           {/* Einstein Morph Circle */}
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.1)] relative" style={{ animation: 'orb-move-1 10s ease-in-out infinite alternate' }}>
+          <motion.div 
+            animate={{
+              borderRadius: [
+                "60% 40% 30% 70% / 60% 30% 70% 40%",
+                "30% 70% 70% 30% / 30% 30% 70% 70%",
+                "50% 50% 20% 80% / 25% 80% 20% 75%",
+                "60% 40% 30% 70% / 60% 30% 70% 40%",
+              ]
+            }}
+            transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
+            className="w-48 h-48 md:w-64 md:h-64 overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.1)] relative"
+          >
             <img src="/einstein-photo-BGOcxese.jpg" alt="Albert Einstein Avatar" className="w-full h-full object-cover scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          </div>
+          </motion.div>
           
           <h2 className="text-5xl md:text-7xl font-bold tracking-tighter">Talk with Avatars</h2>
           <p className="text-gray-400 text-xl max-w-2xl leading-relaxed">Experience dynamic, lifelike conversations with brilliant minds.</p>
@@ -898,10 +909,9 @@ export default function App() {
             START TALKING <ArrowRight size={18} />
           </a>
 
-          {/* Landscape Avatars Banner */}
-          <div className="w-full mt-8 rounded-3xl overflow-hidden border border-white/10 relative group">
-            <img src="/avatars-banner-DT1Pa3ly.png" alt="Avatars Landscape" className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent"></div>
+          {/* Landscape Avatars Banner (No Card) */}
+          <div className="w-full mt-12 relative group">
+            <img src="/avatars-banner-DT1Pa3ly.png" alt="Avatars Landscape" className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-700" />
           </div>
         </div>
       </section>
@@ -998,8 +1008,8 @@ const images = [
 const Skiper34 = () => {
   return (
     <ReactLenis root>
-      <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[20vh] pb-[20vh]">
-        <div className="absolute left-1/2 top-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
+      <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[50vh]">
+        <div className="absolute left-1/2 top-24 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
           <span className="after:from-background after:to-foreground relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:content-['']">
             scroll down
           </span>
@@ -1033,7 +1043,7 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
     target: container,
   });
   
-  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 1200], [1, 0]);
+  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 10000], [1, 0]);
   const isInView = useInView(container, {
     margin: `0px 0px -${100 - vertMargin}% 0px`,
     once: true,
@@ -1042,7 +1052,7 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
   scrollY.on("change", (scrollYValue) => {
     let animationValue = 1;
     if (scrollYValue > maxScrollY) {
-      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 1200);
+      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 10000);
     }
     scale.set(animationValue);
     filter.set((1 - animationValue) * 100);
