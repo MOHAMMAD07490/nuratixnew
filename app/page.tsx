@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, ArrowUp, ArrowRight, Image as ImageIcon, X, Sparkles, User, Activity, Globe as GlobeIcon } from 'lucide-react';
-import createGlobe from "cobe";
+import WorldMap from "@/components/ui/world-map";
 
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
@@ -17,97 +17,6 @@ const CircleNode: React.FC<CircleNodeProps> = ({ className, children, style }) =
   </div>
 );
 
-// --- Interactive WebGL Globe Component ---
-function Globe({ className }: { className?: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerInteracting = useRef<number | null>(null);
-  const pointerInteractionMovement = useRef<number>(0);
-
-  useEffect(() => {
-    let currentWidth = 0;
-    const onResize = () => {
-      if (canvasRef.current) {
-        currentWidth = canvasRef.current.offsetWidth;
-      }
-    };
-    window.addEventListener("resize", onResize);
-    onResize();
-
-    // Prevent cobe from crashing if width is 0 during initial mount
-    if (currentWidth === 0) currentWidth = 400; 
-
-    let phi = 0;
-    const globe = createGlobe(canvasRef.current!, {
-      devicePixelRatio: 2,
-      width: currentWidth * 2,
-      height: currentWidth * 2,
-      phi: 0,
-      theta: 0.3,
-      dark: 1,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 4,
-      baseColor: [0.1, 0.1, 0.1], // Dark gray
-      markerColor: [1, 1, 1], // White markers
-      glowColor: [0.05, 0.05, 0.05],
-      markers: [
-        { location: [40.7128, -74.006], size: 0.07 }, // USA (New York)
-        { location: [25.2048, 55.2708], size: 0.08 }, // Dubai
-        { location: [20.5937, 78.9629], size: 0.1 },  // India
-      ],
-      onRender: (state: any) => {
-        if (!pointerInteracting.current) {
-          phi += 0.005;
-        }
-        state.phi = phi + pointerInteractionMovement.current;
-        state.width = currentWidth * 2;
-        state.height = currentWidth * 2;
-      }
-    } as any);
-
-    setTimeout(() => {
-      if (canvasRef.current) canvasRef.current.style.opacity = "1";
-    }, 100);
-
-    return () => {
-      globe.destroy();
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
-
-  return (
-    <div className={`absolute inset-0 mx-auto aspect-square w-full max-w-[600px] flex items-center justify-center ${className}`}>
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full opacity-0 transition-opacity duration-1000 cursor-grab active:cursor-grabbing"
-        onPointerDown={(e) => {
-          pointerInteracting.current = e.clientX;
-          if(canvasRef.current) canvasRef.current.style.cursor = 'grabbing';
-        }}
-        onPointerUp={() => {
-          pointerInteracting.current = null;
-          if(canvasRef.current) canvasRef.current.style.cursor = 'grab';
-        }}
-        onPointerOut={() => {
-          pointerInteracting.current = null;
-          if(canvasRef.current) canvasRef.current.style.cursor = 'grab';
-        }}
-        onMouseMove={(e) => {
-          if (pointerInteracting.current !== null) {
-            const delta = e.clientX - pointerInteracting.current;
-            pointerInteractionMovement.current = delta * 0.01;
-          }
-        }}
-        onTouchMove={(e) => {
-          if (pointerInteracting.current !== null && e.touches[0]) {
-            const delta = e.touches[0].clientX - pointerInteracting.current;
-            pointerInteractionMovement.current = delta * 0.01;
-          }
-        }}
-      />
-    </div>
-  );
-}
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -441,7 +350,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- Globe / Global Reach Section --- */}
+      {/* --- World Map / Global Reach Section --- */}
       <section className="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
@@ -454,10 +363,35 @@ export default function App() {
             </p>
           </div>
 
-          <div className="relative flex h-[400px] md:h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] magic-border">
-            <Globe />
-            {/* Ambient Overlay to blend edges */}
-            <div className="absolute inset-0 pointer-events-none rounded-3xl shadow-[inset_0_0_80px_rgba(3,3,3,1)]"></div>
+          <div className="relative w-full flex flex-col items-center justify-center overflow-hidden rounded-3xl magic-border">
+            <WorldMap
+              dots={[
+                {
+                  start: { lat: 64.2008, lng: -149.4937 }, // Alaska
+                  end: { lat: 34.0522, lng: -118.2437 }, // LA
+                },
+                {
+                  start: { lat: 64.2008, lng: -149.4937 },
+                  end: { lat: -15.7975, lng: -47.8919 }, // Brazil
+                },
+                {
+                  start: { lat: -15.7975, lng: -47.8919 },
+                  end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
+                },
+                {
+                  start: { lat: 51.5074, lng: -0.1278 }, // London
+                  end: { lat: 28.6139, lng: 77.209 }, // New Delhi
+                },
+                {
+                  start: { lat: 28.6139, lng: 77.209 },
+                  end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
+                },
+                {
+                  start: { lat: 28.6139, lng: 77.209 },
+                  end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
+                },
+              ]}
+            />
           </div>
         </div>
       </section>
