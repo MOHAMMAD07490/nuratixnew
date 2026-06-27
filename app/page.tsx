@@ -9,6 +9,7 @@ import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import { SmoothInput } from "@/components/ui/smooth-input";
 import { motion } from "motion/react";
+import Goo from "gooey-react";
 
 const beforeCode = `import { NextRequest } from 'next/server';
 
@@ -174,7 +175,7 @@ export function AnimatedLanding() {
               <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] font-mono text-zinc-500">
                 <span>OUTPUT: GENERATED CODE</span>
                 {outputText.length === targetOutput.length && (
-                  <span className="text-emerald-500 font-bold animate-pulse">✨ DONE</span>
+                  <span className="text-emerald-500 font-bold animate-pulse">DONE</span>
                 )}
               </div>
               <pre className="p-4 overflow-x-auto text-left font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap min-h-[240px]">
@@ -193,28 +194,7 @@ export function AnimatedLanding() {
   );
 }
 
-const SkiperGooeyFilterProvider = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute bottom-0 left-0 w-0 h-0 hidden"
-      version="1.1"
-    >
-      <defs>
-        <filter id="SkiperGooeyFilter">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="4.4" result="blur" />
-          <feColorMatrix
-            in="blur"
-            mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -7"
-            result="SkiperGooeyFilter"
-          />
-          <feBlend in="SourceGraphic" in2="SkiperGooeyFilter" />
-        </filter>
-      </defs>
-    </svg>
-  );
-};
+
 
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
@@ -349,32 +329,30 @@ export default function App() {
 
             {/* Gooey Animation Effect */}
             <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
-              <div
-                style={{ filter: "url(#SkiperGooeyFilter)" }}
-                className="flex items-center justify-center relative w-8 h-8"
-              >
-                <motion.li
-                  animate={scrollY < 120 ? {
-                    x: 20,
-                    scale: [1, 1.2, 0.8, 0],
-                    borderRadius: 40,
-                  } : {
-                    x: 0,
-                    scale: 1,
-                    borderRadius: 40,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                  className="bg-white absolute w-3.5 h-3.5 rounded-full list-none"
-                />
-                <motion.li
-                  className="bg-white w-3.5 h-3.5 rounded-full list-none"
-                />
-              </div>
-              <SkiperGooeyFilterProvider />
+              <Goo>
+                <div className="flex items-center justify-center relative w-8 h-8">
+                  <motion.div
+                    animate={scrollY < 120 ? {
+                      x: 20,
+                      scale: [1, 1.2, 0.8, 0],
+                      borderRadius: 40,
+                    } : {
+                      x: 0,
+                      scale: 1,
+                      borderRadius: 40,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                    }}
+                    className="bg-white absolute w-3.5 h-3.5 rounded-full"
+                  />
+                  <motion.div
+                    className="bg-white w-3.5 h-3.5 rounded-full"
+                  />
+                </div>
+              </Goo>
             </div>
           </div>
           <div className="flex items-center gap-4">
