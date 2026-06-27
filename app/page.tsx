@@ -429,7 +429,7 @@ export default function App() {
       {/* --- Liquid Cosmic Title Text --- */}
       <div className="absolute top-0 left-0 w-full h-screen flex flex-col justify-center items-center text-center pointer-events-none z-10">
         <motion.div 
-          className="px-4"
+          className="px-4 mt-[-14vh]"
           style={{ 
             opacity: headlineOpacity, 
             y: headlineY 
@@ -459,13 +459,17 @@ export default function App() {
           backdropFilter: `blur(30px) saturate(185%)`,
           borderBottom: activeBorderBottom,
           boxShadow: activeShadow,
-          willChange: 'transform, width, height, border-radius'
+          willChange: 'transform, width, height, border-radius',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
         }}
       >
         {/* Animated Refraction Sweep on Surface */}
         <motion.div className="glass-specular" style={{ opacity: glassGlareOpacity }} />
 
-        <div className="w-full h-full relative flex items-center justify-center px-6 sm:px-8 max-w-7xl mx-auto">
+        <div className="w-full h-full relative flex items-center justify-between px-8 sm:px-12 max-w-7xl mx-auto">
           
           {/* --- STATE A: PROMPT BOX (Fades and dissolves dynamically as page is scrolled) --- */}
           <motion.div 
@@ -492,9 +496,31 @@ export default function App() {
             </button>
           </motion.div>
 
-          {/* --- STATE B: HEADER LOGO ONLY (Unfolds cleanly in navbar position) --- */}
+          {/* --- STATE B: DOCKED HEADER CONTROLS --- */}
+          {/* LEFT ELEMENT: 3-slash Navigation Button */}
           <motion.div 
-            className="flex items-center justify-center"
+            className="flex items-center justify-start shrink-0"
+            style={{
+              opacity: logoOpacity,
+              scale: logoScale,
+              pointerEvents: isDocked ? 'auto' : 'none'
+            }}
+          >
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:scale-105 active:scale-95 transition-all text-white flex items-center justify-center shadow-lg"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+            </button>
+          </motion.div>
+
+          {/* RIGHT ELEMENT: NURATIX Logo (with Gooey Split/Merge response next to it) */}
+          <motion.div 
+            className="flex items-center justify-end shrink-0"
             style={{
               opacity: logoOpacity,
               scale: logoScale,
@@ -502,17 +528,16 @@ export default function App() {
             }}
           >
             <Goo>
-              {/* Refined Geometric Brand Logo */}
               <div className="flex items-center gap-3 relative">
                 {/* Gooey Animation Effect */}
-                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
+                <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 flex items-center pointer-events-none z-0">
                   <motion.div
                     animate={!isDocked ? {
                       x: 0,
                       scale: 1,
                       borderRadius: 40,
                     } : {
-                      x: 20,
+                      x: -20,
                       scale: [1, 1.2, 0.8, 0],
                       borderRadius: 40,
                     }}
@@ -528,11 +553,11 @@ export default function App() {
                   />
                 </div>
 
-                <svg className="w-5 h-5 text-white shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-5 h-5 text-white shrink-0 z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 2L2 12l10 10 10-10L12 2z" />
                   <path d="M12 6l6 6-6 6-6-6 6-6z" fill="currentColor" className="opacity-20" />
                 </svg>
-                <span className="font-bold text-sm tracking-[0.45em] uppercase text-white font-serif">
+                <span className="font-bold text-sm tracking-[0.45em] uppercase text-white font-serif z-10">
                   NURATIX
                 </span>
               </div>
