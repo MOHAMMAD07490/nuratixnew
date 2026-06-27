@@ -7,6 +7,8 @@ import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 import { CodeComparison } from "@/registry/magicui/code-comparison";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
+import { SmoothInput } from "@/components/ui/smooth-input";
+import { motion } from "motion/react";
 
 const beforeCode = `import { NextRequest } from 'next/server';
 
@@ -75,7 +77,7 @@ function CodeComparisonDemo() {
   )
 }
 
-function PromptToCodeDemo() {
+function PromptToCodeDemo({ scrollY }: { scrollY: number }) {
   const [step, setStep] = useState(0);
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
@@ -128,8 +130,15 @@ export function AnimatedLanding() {
   }, [step, inputText, outputText]);
 
   return (
-    <div className="mx-auto w-full max-w-4xl relative">
-      <div className="w-full rounded-xl border border-zinc-800 bg-black overflow-hidden shadow-2xl">
+    <div className="mx-auto w-full max-w-[1100px] relative">
+      <div 
+        style={{
+          transform: `perspective(1200px) rotateX(${Math.min(10, scrollY / 70)}deg) translateY(${Math.min(12, scrollY / 50)}px)`,
+          transformStyle: "preserve-3d" as const,
+          transition: "transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)",
+        }}
+        className="w-full rounded-xl border border-zinc-800 bg-black overflow-hidden shadow-2xl"
+      >
         <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-4 py-3">
           <div className="flex gap-2">
             <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
@@ -141,18 +150,19 @@ export function AnimatedLanding() {
         </div>
 
         <div className="p-6 space-y-6">
-          <div className="flex items-center gap-3 border border-zinc-800 rounded-lg p-3 bg-zinc-950/50">
+          <div className="flex items-center gap-3 w-full">
             <span className="text-zinc-500 font-mono text-sm">prompt$</span>
-            <div className="flex-1 font-mono text-sm text-white min-h-[20px] text-left relative">
-              {inputText}
-              {step === 1 && (
-                <span className="inline-block w-1.5 h-4 bg-white ml-0.5 animate-pulse"></span>
-              )}
-            </div>
+            <SmoothInput
+              isSimulating={step === 1}
+              value={inputText}
+              placeholder="Enter your prompt..."
+              wrapperClassName="flex-1"
+              readOnly
+            />
             <button 
               className={cn(
-                "px-4 py-1.5 rounded-md font-mono text-xs transition-all duration-300 font-semibold",
-                step >= 2 ? "bg-white text-black scale-95 shadow-[0_0_10px_rgba(255,255,255,0.3)]" : "bg-zinc-800 text-zinc-500"
+                "px-5 py-3 rounded-xl font-mono text-xs transition-all duration-300 font-semibold self-stretch flex items-center justify-center border border-zinc-800",
+                step >= 2 ? "bg-white text-black scale-95 shadow-[0_0_10px_rgba(255,255,255,0.3)] border-white" : "bg-zinc-800 text-zinc-500"
               )}
             >
               [SEND]
@@ -183,6 +193,29 @@ export function AnimatedLanding() {
   );
 }
 
+const SkiperGooeyFilterProvider = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute bottom-0 left-0 w-0 h-0 hidden"
+      version="1.1"
+    >
+      <defs>
+        <filter id="SkiperGooeyFilter">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4.4" result="blur" />
+          <feColorMatrix
+            in="blur"
+            mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -7"
+            result="SkiperGooeyFilter"
+          />
+          <feBlend in="SourceGraphic" in2="SkiperGooeyFilter" />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
 // --- Custom Node Component for Animated Beams ---
 interface CircleNodeProps {
   className?: string;
@@ -199,6 +232,7 @@ const CircleNode: React.FC<CircleNodeProps> = ({ className, children, style }) =
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const latestArticle = {
@@ -210,7 +244,10 @@ export default function App() {
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+      setScrollY(window.scrollY);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -305,8 +342,40 @@ export default function App() {
       {/* --- Navigation --- */}
       <nav className="fixed top-0 w-full z-50 bg-[#030303] border-b border-white/5 py-4">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer group">
-            <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7 group-hover:opacity-80 transition-opacity" style={{ filter: 'brightness(0) invert(1)' }} />
+          <div className="flex items-center gap-2 cursor-pointer group relative">
+            <div className="relative z-10">
+              <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7 group-hover:opacity-80 transition-opacity" style={{ filter: 'brightness(0) invert(1)' }} />
+            </div>
+
+            {/* Gooey Animation Effect */}
+            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
+              <div
+                style={{ filter: "url(#SkiperGooeyFilter)" }}
+                className="flex items-center justify-center relative w-8 h-8"
+              >
+                <motion.li
+                  animate={scrollY < 120 ? {
+                    x: 20,
+                    scale: [1, 1.2, 0.8, 0],
+                    borderRadius: 40,
+                  } : {
+                    x: 0,
+                    scale: 1,
+                    borderRadius: 40,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                  className="bg-white absolute w-3.5 h-3.5 rounded-full list-none"
+                />
+                <motion.li
+                  className="bg-white w-3.5 h-3.5 rounded-full list-none"
+                />
+              </div>
+              <SkiperGooeyFilterProvider />
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <button className="hidden md:flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium">
@@ -470,7 +539,7 @@ export default function App() {
             Easily add animations, generate landing pages, click send, and watch the AI write production-ready code in seconds.
           </p>
           <div className="w-full">
-            <PromptToCodeDemo />
+            <PromptToCodeDemo scrollY={scrollY} />
           </div>
         </div>
       </section>

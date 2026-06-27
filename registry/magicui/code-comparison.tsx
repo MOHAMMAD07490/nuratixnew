@@ -113,7 +113,7 @@ export function CodeComparison({
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl">
+    <div className="mx-auto w-full max-w-[1200px]">
       <div className="group border-zinc-800 relative w-full overflow-hidden rounded-xl border bg-black">
         <div className="relative grid md:grid-cols-2">
           <div
