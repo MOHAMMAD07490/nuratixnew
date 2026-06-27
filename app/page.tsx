@@ -227,7 +227,7 @@ export default function App() {
     url: "/blog/145b93d5",
     thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/bc796316-1782492391573.png"
   };
-  const nuratixLogo = "https://nuratix.com/logo.png";
+  const nuratixLogo = "/white-logo.png";
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
   useEffect(() => {
@@ -425,6 +425,13 @@ export default function App() {
         }
       `}} />
 
+      {/* --- PERSISTENT GLOBAL HEADER --- */}
+      <header className="fixed top-0 left-0 w-full z-[100] p-6 flex justify-between items-center pointer-events-none">
+        <div className="flex items-center pointer-events-auto cursor-pointer">
+           <img src={nuratixLogo} alt="Nuratix" className="h-6 md:h-7" />
+        </div>
+      </header>
+
       {/* --- Ambient Fluid Space Light (Tracks cursor) --- */}
       <div 
         className="pointer-events-none fixed inset-0 z-10 opacity-40 transition-opacity duration-1000"
@@ -488,15 +495,14 @@ export default function App() {
           
           {/* --- STATE A: PROMPT BOX (Fades and dissolves dynamically as page is scrolled) --- */}
           <motion.div 
-            className="absolute inset-0 flex items-center justify-between gap-3"
+            className="absolute inset-0 flex items-center justify-between"
             style={{
               opacity: inputOpacity,
               scale: inputScale,
               pointerEvents: !isDocked ? 'auto' : 'none',
-              padding: '8px 10px 8px 16px'
+              padding: '8px 10px 8px 24px'
             }}
           >
-            <img src={nuratixLogo} alt="Nuratix" className="h-5 shrink-0 filter brightness-0 invert" />
             <input 
               type="text" 
               placeholder="Ask NoxyAI anything..." 
@@ -524,7 +530,7 @@ export default function App() {
           >
             <Goo>
               <div className="flex items-center gap-3 relative">
-                <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0 filter brightness-0 invert" />
+                <img src={nuratixLogo} alt="Nuratix" className="h-5 md:h-6 shrink-0" />
 
                 {/* Gooey Animation Effect */}
                 <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 flex items-center pointer-events-none z-0">
@@ -584,7 +590,7 @@ export default function App() {
       {/* --- Mobile Slide-out Navigation Drawer --- */}
       <div className={`fixed inset-0 bg-black/95 z-50 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="absolute top-6 left-6">
-          <img src={nuratixLogo} alt="Nuratix" className="h-6 filter brightness-0 invert" />
+          <img src={nuratixLogo} alt="Nuratix" className="h-6" />
         </div>
         <div className="flex flex-col items-center justify-center h-full gap-8 text-xl font-medium relative">
           <button 
@@ -917,7 +923,7 @@ export default function App() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/20 gap-4 relative z-20">
             <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
-              <img src={nuratixLogo} alt="Nuratix" className="h-6 brightness-0 invert" style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))' }} />
+              <img src={nuratixLogo} alt="Nuratix" className="h-6" style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.5))' }} />
             </div>
             <p className="text-gray-300 text-sm font-medium drop-shadow-md">© 2025 nuratix.com. All rights reserved.</p>
           </div>
@@ -930,11 +936,12 @@ export default function App() {
 }
 
 const images = [
-  "/futuristic-robot-tiger-Dveu0BEn.jpg",
-  "/fantasy-eye-illustration-BcXEo0ux.jpg",
-  "/white-lamborghini-aventado-L_2k2a.jpg",
-  "/astronaut-sitting-on-mars-2hQj.jpg",
-  "/futuristic-robot-tiger-Dveu0BEn.jpg",
+  "/img23.png",
+  "/tn.jpeg",
+  "/tn (1).jpeg",
+  "/tn (2).jpeg",
+  "/tn (3).jpeg",
+  "/tn (4).jpeg",
 ];
 
 const Skiper34 = () => {
