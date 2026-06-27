@@ -560,13 +560,11 @@ export default function App() {
               pointerEvents: isDocked ? 'auto' : 'none'
             }}
           >
-            <a href="#" className="hover:text-white transition-colors duration-300">Products</a>
-            <a href="#" className="hover:text-white transition-colors duration-300">Solutions</a>
-            <a href="#" className="hover:text-white transition-colors duration-300">Pricing</a>
-            <a href="#" className="hover:text-white transition-colors duration-300">Company</a>
-            <button className="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-[10px] font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
+            <a href="https://policies.noxyai.com/terms" className="hover:text-white transition-colors duration-300">Terms</a>
+            <a href="https://policies.noxyai.com/privacy" className="hover:text-white transition-colors duration-300">Privacy</a>
+            <a href="https://noxyai.com" className="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-200 text-[10px] font-bold tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg whitespace-nowrap">
               TRY NOXYAI
-            </button>
+            </a>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10"
@@ -583,6 +581,9 @@ export default function App() {
       </motion.div>
       {/* --- Mobile Slide-out Navigation Drawer --- */}
       <div className={`fixed inset-0 bg-black/95 z-50 backdrop-blur-3xl transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="absolute top-6 left-6">
+          <img src={nuratixLogo} alt="Nuratix" className="h-6 filter brightness-0 invert" />
+        </div>
         <div className="flex flex-col items-center justify-center h-full gap-8 text-xl font-medium relative">
           <button 
             onClick={() => setIsMobileMenuOpen(false)} 
@@ -593,13 +594,11 @@ export default function App() {
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          <a href="#" className="hover:text-gray-400 transition-colors">Products</a>
-          <a href="#" className="hover:text-gray-400 transition-colors">Solutions</a>
-          <a href="#" className="hover:text-gray-400 transition-colors">Pricing</a>
-          <a href="#" className="hover:text-gray-400 transition-colors">Company</a>
-          <button className="mt-4 px-8 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-gray-200 transition-colors">
+          <a href="https://policies.noxyai.com/terms" className="hover:text-gray-400 transition-colors">Terms</a>
+          <a href="https://policies.noxyai.com/privacy" className="hover:text-gray-400 transition-colors">Privacy</a>
+          <a href="https://noxyai.com" className="mt-4 px-8 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-gray-200 transition-colors">
             TRY NOXYAI
-          </button>
+          </a>
         </div>
       </div>
 
@@ -788,7 +787,7 @@ export default function App() {
           </div>
 
           {/* Clean Orb Component */}
-          <div className="relative flex h-[400px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl">
+          <div className="relative flex min-h-[400px] lg:min-h-[550px] w-full flex-col items-center justify-center rounded-3xl">
             
             <div className="absolute inset-20 md:inset-16 bg-[radial-gradient(circle_at_center,rgba(60,60,120,0.15)_0%,transparent_70%)] rounded-full z-0"></div>
 
