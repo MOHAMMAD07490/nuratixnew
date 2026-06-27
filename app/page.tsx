@@ -8,8 +8,9 @@ import { CodeComparison } from "@/registry/magicui/code-comparison";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import { SmoothInput } from "@/components/ui/smooth-input";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useInView, useMotionValue } from "motion/react";
 import Goo from "gooey-react";
+import ReactLenis from "lenis/react";
 
 const beforeCode = `import { NextRequest } from 'next/server';
 
@@ -487,14 +488,15 @@ export default function App() {
           
           {/* --- STATE A: PROMPT BOX (Fades and dissolves dynamically as page is scrolled) --- */}
           <motion.div 
-            className="absolute inset-0 flex items-center justify-between"
+            className="absolute inset-0 flex items-center justify-between gap-3"
             style={{
               opacity: inputOpacity,
               scale: inputScale,
               pointerEvents: !isDocked ? 'auto' : 'none',
-              padding: '8px 10px 8px 24px'
+              padding: '8px 10px 8px 16px'
             }}
           >
+            <img src={nuratixLogo} alt="Nuratix" className="h-5 shrink-0 filter brightness-0 invert" />
             <input 
               type="text" 
               placeholder="Ask NoxyAI anything..." 
@@ -610,6 +612,9 @@ export default function App() {
 
         {/* --- Scrollable Body Segment --- */}
         <div className="bg-[#030303] relative z-20">
+
+      {/* --- Sticky Image Scroll --- */}
+      <Skiper34 />
 
       {/* --- Trusted Logo Ticker --- */}
       <section className="py-12 border-b border-white/5 bg-[#030303] overflow-hidden">
@@ -884,55 +889,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- Visual Realities Section --- */}
-      <section className="max-w-7xl mx-auto px-6 py-32 text-center flex flex-col items-center">
-        <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">VISUAL<br/>REALITIES</h2>
-        <p className="text-gray-400 text-xl max-w-2xl leading-relaxed mb-12">Generate stunning, hyper-realistic images from simple text descriptions. Turn your cosmic imagination into reality.</p>
-        <button className="magic-border bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md px-8 py-4 rounded-full flex items-center gap-3 hover:scale-105 transition-all duration-300 mb-16 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-          <span className="font-semibold tracking-wider text-sm uppercase">CREATE IMAGES</span><ImageIcon size={20} />
-        </button>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-8">
-          {/* Image 1: Cybernetic White Tiger */}
-          <div className="relative group rounded-[2rem] overflow-hidden magic-border aspect-[3/2] w-full cursor-pointer bg-zinc-950">
-            <img 
-              src="/futuristic-robot-tiger-Dveu0BEn.jpg" 
-              alt="Cybernetic White Tiger" 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-            />
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-left">
-              <p className="text-xs tracking-wider text-blue-400 font-semibold uppercase mb-2">Prompt</p>
-              <p className="text-sm md:text-base text-zinc-200 leading-relaxed font-sans font-medium">
-                A cybernetic white tiger with futuristic armor plating and glowing red eyes, standing amidst a field of vibrant red flowers, soft golden hour lighting, high detailed robotic-animal hybrid digital art
-              </p>
-            </div>
-            {/* Always visible tap indicator for mobile */}
-            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-zinc-400 group-hover:opacity-0 transition-opacity">
-              Hover to view prompt
-            </div>
-          </div>
-
-          {/* Image 2: Fantasy Eye Cityscape */}
-          <div className="relative group rounded-[2rem] overflow-hidden magic-border aspect-[3/2] w-full cursor-pointer bg-zinc-950">
-            <img 
-              src="/fantasy-eye-illustration-BcXEo0ux.jpg" 
-              alt="Fantasy Cyberpunk Eye" 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-            />
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-left">
-              <p className="text-xs tracking-wider text-blue-400 font-semibold uppercase mb-2">Prompt</p>
-              <p className="text-sm md:text-base text-zinc-200 leading-relaxed font-sans font-medium">
-                A giant human eye reflecting a glowing cyberpunk metropolis, surreal floating upside-down skyscrapers, warm orange and neon teal lighting, highly detailed iris texture, digital fantasy illustration
-              </p>
-            </div>
-            {/* Always visible tap indicator for mobile */}
-            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-zinc-400 group-hover:opacity-0 transition-opacity">
-              Hover to view prompt
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Visual Realities Component Replaced */}
 
       {/* --- Footer with VIBRANT Magic Motion --- */}
       <footer className="relative pt-40 pb-12 overflow-hidden border-t border-white/10 group">
@@ -971,3 +928,85 @@ export default function App() {
     </div>
   );
 }
+
+const images = [
+  "/futuristic-robot-tiger-Dveu0BEn.jpg",
+  "/fantasy-eye-illustration-BcXEo0ux.jpg",
+  "/white-lamborghini-aventado-L_2k2a.jpg",
+  "/astronaut-sitting-on-mars-2hQj.jpg",
+  "/futuristic-robot-tiger-Dveu0BEn.jpg",
+];
+
+const Skiper34 = () => {
+  return (
+    <ReactLenis root>
+      <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[20vh] pb-[20vh]">
+        <div className="absolute left-1/2 top-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
+          <span className="after:from-background after:to-foreground relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:content-['']">
+            scroll down to see effect
+          </span>
+        </div>
+        {images.map((img, idx) => (
+          <StickyCard_003 key={idx} imgUrl={img} />
+        ))}
+      </section>
+    </ReactLenis>
+  );
+};
+
+const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
+  const vertMargin = 10;
+  const container = useRef(null);
+  const [maxScrollY, setMaxScrollY] = useState(Infinity);
+
+  const filter = useMotionValue(0);
+  const negateFilter = useTransform(filter, (value: number) => -value);
+
+  const { scrollY } = useScroll({
+    target: container,
+  });
+  
+  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 10000], [1, 0]);
+  const isInView = useInView(container, {
+    margin: `0px 0px -${100 - vertMargin}% 0px`,
+    once: true,
+  });
+
+  scrollY.on("change", (scrollYValue) => {
+    let animationValue = 1;
+    if (scrollYValue > maxScrollY) {
+      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 10000);
+    }
+    scale.set(animationValue);
+    filter.set((1 - animationValue) * 100);
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      setMaxScrollY(scrollY.get());
+    }
+  }, [isInView, scrollY]);
+
+  return (
+    <motion.div
+      ref={container}
+      className="rounded-[3rem] sticky h-[200px] w-full max-w-5xl overflow-hidden bg-neutral-900 shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-white/10"
+      style={{
+        scale: scale,
+        rotate: filter,
+        height: `${100 - 2 * vertMargin}vh`,
+        top: `${vertMargin}vh`,
+      }}
+    >
+      <motion.img
+        src={imgUrl}
+        alt={imgUrl}
+        style={{
+          rotate: negateFilter,
+        }}
+        className="h-full w-full scale-125 object-cover"
+        sizes="90vw"
+      />
+    </motion.div>
+  );
+};
