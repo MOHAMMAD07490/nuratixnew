@@ -222,11 +222,18 @@ export default function App() {
   const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  const latestArticle = {
-    title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
-    url: "https://blog.noxyai.com/145b93d5",
-    thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/bc796316-1782492391573.png"
-  };
+  const articles = [
+    {
+      title: "Google Meets AI: How NoxyAI Supercharges Gmail, Drive, and Sheets",
+      url: "https://blog.noxyai.com/blog/145b93d5",
+      thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/bc796316-1782492391573.png"
+    },
+    {
+      title: "Your Privacy and Security at NoxyAI",
+      url: "https://blog.noxyai.com/blog/33d23557",
+      thumbnail_url: "https://conjfpheubfkpmmhvswj.supabase.co/storage/v1/object/public/thumbnails/eadbedf8-1773417259361.png"
+    }
+  ];
   const nuratixLogo = "/white-logo.png";
   const noxyaiLogo = "https://noxyai.com/logo-white.png";
 
@@ -864,20 +871,28 @@ export default function App() {
           <p className="text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold mb-4">[ FEATURED ]</p>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight">Latest Insights</h2>
         </div>
-        <a href={latestArticle.url} className="group block cursor-pointer">
-          <div className="magic-border bg-[#0A0A0A] rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(0,100,255,0.1)]">
-            <div className="h-64 md:h-96 w-full relative overflow-hidden bg-gradient-to-br from-blue-900/10 to-black">
-              <img src={latestArticle.thumbnail_url} alt={latestArticle.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 mix-blend-screen" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent"></div>
-            </div>
-            <div className="p-8 md:p-12 relative z-10 -mt-20">
-              <h3 className="text-2xl md:text-4xl font-medium mb-8 max-w-3xl leading-snug">{latestArticle.title}</h3>
-              <div className="flex items-center text-sm tracking-widest text-gray-400 group-hover:text-white transition-colors uppercase font-semibold">
-                READ <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {articles.map((article, index) => (
+            <a key={index} href={article.url} className="group block cursor-pointer">
+              <div className="magic-border bg-[#0A0A0A] rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(0,100,255,0.1)] h-full flex flex-col justify-between">
+                <div>
+                  <div className="h-64 w-full relative overflow-hidden bg-gradient-to-br from-blue-900/10 to-black">
+                    <img src={article.thumbnail_url} alt={article.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 mix-blend-screen" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent"></div>
+                  </div>
+                  <div className="p-8 relative z-10 -mt-16">
+                    <h3 className="text-xl md:text-2xl font-medium mb-6 leading-snug line-clamp-2">{article.title}</h3>
+                  </div>
+                </div>
+                <div className="p-8 pt-0 relative z-10">
+                  <div className="flex items-center text-xs tracking-widest text-gray-400 group-hover:text-white transition-colors uppercase font-semibold">
+                    READ <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </a>
+            </a>
+          ))}
+        </div>
       </section>
 
       {/* --- Products Section --- */}
