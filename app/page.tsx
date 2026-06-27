@@ -304,7 +304,8 @@ export default function App() {
   const headlineY = useTransform(scrollY, [0, threshold * 0.85], [0, -60]);
 
   return (
-    <div className="min-h-screen bg-[#010103] text-white font-sans selection:bg-white/30 overflow-x-hidden relative">
+    <ReactLenis root>
+    <div className="min-h-screen bg-[#010103] text-white font-sans selection:bg-white/30 overflow-clip relative">
       {/* --- CSS Animations Block --- */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes float-chat {
@@ -618,6 +619,29 @@ export default function App() {
 
         {/* --- Scrollable Body Segment --- */}
         <div className="bg-[#030303] relative z-20">
+
+      {/* --- Powered By Marquee --- */}
+      <section className="py-24 border-b border-white/5 bg-[#030303] overflow-hidden relative z-20">
+        <p className="text-center text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold mb-12">Powered By World-Class Technologies</p>
+        <div className="flex w-[200%] md:w-[150%]">
+          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
+            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">OpenAI</div>
+            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">Anthropic</div>
+          </div>
+          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
+            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">OpenAI</div>
+            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">Anthropic</div>
+          </div>
+        </div>
+      </section>
 
       {/* --- Sticky Image Scroll --- */}
       <Skiper34 />
@@ -993,6 +1017,7 @@ export default function App() {
       </div>
       </main>
     </div>
+    </ReactLenis>
   );
 }
 
@@ -1007,7 +1032,6 @@ const images = [
 
 const Skiper34 = () => {
   return (
-    <ReactLenis root>
       <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[50vh]">
         <div className="absolute left-1/2 top-24 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
           <span className="after:from-background after:to-foreground relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:content-['']">
@@ -1027,7 +1051,6 @@ const Skiper34 = () => {
           </a>
         </div>
       </section>
-    </ReactLenis>
   );
 };
 
