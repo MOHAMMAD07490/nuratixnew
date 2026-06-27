@@ -483,9 +483,46 @@ export default function App() {
         <button className="magic-border bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md px-8 py-4 rounded-full flex items-center gap-3 hover:scale-105 transition-all duration-300 mb-16 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
           <span className="font-semibold tracking-wider text-sm uppercase">CREATE IMAGES</span><ImageIcon size={20} />
         </button>
-        <div className="w-full rounded-[2.5rem] overflow-hidden relative magic-border">
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
-          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop" alt="AI Generated Reality" className="w-full h-[50vh] md:h-[70vh] object-cover hover:scale-105 transition-transform duration-[2s] ease-in-out" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-8">
+          {/* Image 1: Cybernetic White Tiger */}
+          <div className="relative group rounded-[2rem] overflow-hidden magic-border aspect-[3/2] w-full cursor-pointer bg-zinc-950">
+            <img 
+              src="/futuristic-robot-tiger-Dveu0BEn.jpg" 
+              alt="Cybernetic White Tiger" 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+            />
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-left">
+              <p className="text-xs tracking-wider text-blue-400 font-semibold uppercase mb-2">Prompt</p>
+              <p className="text-sm md:text-base text-zinc-200 leading-relaxed font-sans font-medium">
+                A cybernetic white tiger with futuristic armor plating and glowing red eyes, standing amidst a field of vibrant red flowers, soft golden hour lighting, high detailed robotic-animal hybrid digital art
+              </p>
+            </div>
+            {/* Always visible tap indicator for mobile */}
+            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-zinc-400 group-hover:opacity-0 transition-opacity">
+              Hover to view prompt
+            </div>
+          </div>
+
+          {/* Image 2: Fantasy Eye Cityscape */}
+          <div className="relative group rounded-[2rem] overflow-hidden magic-border aspect-[3/2] w-full cursor-pointer bg-zinc-950">
+            <img 
+              src="/fantasy-eye-illustration-BcXEo0ux.jpg" 
+              alt="Fantasy Cyberpunk Eye" 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+            />
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-left">
+              <p className="text-xs tracking-wider text-blue-400 font-semibold uppercase mb-2">Prompt</p>
+              <p className="text-sm md:text-base text-zinc-200 leading-relaxed font-sans font-medium">
+                A giant human eye reflecting a glowing cyberpunk metropolis, surreal floating upside-down skyscrapers, warm orange and neon teal lighting, highly detailed iris texture, digital fantasy illustration
+              </p>
+            </div>
+            {/* Always visible tap indicator for mobile */}
+            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-zinc-400 group-hover:opacity-0 transition-opacity">
+              Hover to view prompt
+            </div>
+          </div>
         </div>
       </section>
 
