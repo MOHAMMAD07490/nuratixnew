@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     siteName: "Nuratix",
     images: [
       {
-        url: "/logo.png",
+        url: "https://nuratix.com/logo.png",
         width: 1200,
         height: 630,
       }
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nuratix - Advanced AI Models & Multi-Agent Systems",
     description: "Nuratix is the parent company of NoxyAI, an advanced multi-agent AI platform combining chat, image generation, voice AI, real-time web search, coding, and an OpenAI-compatible API.",
-    images: ["/logo.png"],
+    images: ["https://nuratix.com/logo.png"],
   },
   robots: {
     index: true,
@@ -105,6 +105,84 @@ const jsonLd = {
       "author": {
         "@id": "https://nuratix.com/#organization"
       }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://nuratix.com/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Nuratix Home",
+          "item": "https://nuratix.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About Us",
+          "item": "https://aboutus.nuratix.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Blog",
+          "item": "https://blog.noxyai.com"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://nuratix.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I cancel my subscription?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Go to /subscription and click Cancel. Cancellations are allowed during the first 3 days of each billing cycle."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What payment methods do you accept?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We accept payments via stripe, supporting credit cards, debit cards and net banking."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I exceed my token limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "NoxyAI does not use token-based limits. Free plan gives access to basic models with unlimited usage. Pro plan offers unlimited access to all models."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I request a refund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Email support@noxyai.com within 7 days of purchase. Refunds are issued only for verified technical issues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many AI models can Pro users access?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pro users have access to all available models and can switch between them at any time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I switch models during a conversation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pro users can switch models at any time. The new model will not retain context from earlier messages."
+          }
+        }
+      ]
     }
   ]
 };
