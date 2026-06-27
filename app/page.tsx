@@ -629,16 +629,22 @@ export default function App() {
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">OpenAI</div>
-            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">Anthropic</div>
+            
+            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
           <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
             <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
             <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">OpenAI</div>
-            <div className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">Anthropic</div>
+
+            <img src="/nvidia-logo.png" alt="Nvidia" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/google-logo.png" alt="Google" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/stripe-logo.png" alt="Stripe" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src="/supabase-logo.png" alt="Supabase" className="h-8 md:h-12 object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
           </div>
         </div>
       </section>
@@ -1031,6 +1037,13 @@ const images = [
 ];
 
 const Skiper34 = () => {
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   return (
       <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[50vh]">
         <div className="absolute left-1/2 top-24 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
@@ -1101,6 +1114,8 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
       <motion.img
         src={imgUrl}
         alt={imgUrl}
+        loading="eager"
+        fetchPriority="high"
         style={{
           rotate: negateFilter,
         }}
