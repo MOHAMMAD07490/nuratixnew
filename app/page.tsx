@@ -622,22 +622,7 @@ export default function App() {
       {/* --- Sticky Image Scroll --- */}
       <Skiper34 />
 
-      {/* --- Trusted Logo Ticker --- */}
-      <section className="py-12 border-b border-white/5 bg-[#030303] overflow-hidden">
-        <p className="text-center text-xs tracking-widest text-gray-500 uppercase font-semibold mb-8">Trusted by fast-growing startups</p>
-        <div className="flex w-[200%] md:w-[150%]">
-          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
-            {['OpenAI', 'Retool', 'Stripe', 'Wise', 'Loom', 'Medium', 'Cash App', 'Linear'].map((logo, i) => (
-              <div key={i} className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">{logo}</div>
-            ))}
-          </div>
-          <div className="flex w-1/2 justify-around items-center animate-[marquee_20s_linear_infinite]">
-            {['OpenAI', 'Retool', 'Stripe', 'Wise', 'Loom', 'Medium', 'Cash App', 'Linear'].map((logo, i) => (
-              <div key={i+10} className="text-xl md:text-2xl font-bold text-white/30 hover:text-white/60 transition-colors px-8 font-serif tracking-tight">{logo}</div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Trusted By Section Removed */}
 
       {/* --- Bento Grid --- */}
       <section className="max-w-7xl mx-auto px-6 py-24 md:py-32">
@@ -897,6 +882,71 @@ export default function App() {
 
       {/* Visual Realities Component Replaced */}
 
+      {/* --- Talk With Avatars Section --- */}
+      <section className="max-w-7xl mx-auto px-6 py-24 text-center border-t border-white/5">
+        <div className="flex flex-col items-center gap-12">
+          {/* Einstein Morph Circle */}
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.1)] relative" style={{ animation: 'orb-move-1 10s ease-in-out infinite alternate' }}>
+            <img src="/einstein-photo-BGOcxese.jpg" alt="Albert Einstein Avatar" className="w-full h-full object-cover scale-110" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter">Talk with Avatars</h2>
+          <p className="text-gray-400 text-xl max-w-2xl leading-relaxed">Experience dynamic, lifelike conversations with brilliant minds.</p>
+          
+          <a href="https://www.noxyai.com/public/avatars" className="magic-border px-8 py-4 rounded-full bg-white text-black font-semibold tracking-wider hover:bg-neutral-200 transition-all flex items-center gap-2">
+            START TALKING <ArrowRight size={18} />
+          </a>
+
+          {/* Landscape Avatars Banner */}
+          <div className="w-full mt-8 rounded-3xl overflow-hidden border border-white/10 relative group">
+            <img src="/avatars-banner-DT1Pa3ly.png" alt="Avatars Landscape" className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-transparent"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FAQ Section --- */}
+      <section className="max-w-4xl mx-auto px-6 py-24 border-t border-white/5">
+        <div className="text-center mb-16">
+          <p className="text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold mb-4">[ SUPPORT ]</p>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight">Frequently Asked Questions</h2>
+        </div>
+        <div className="space-y-8 text-left">
+          {[
+            {
+              q: "How do I cancel my subscription?",
+              a: "Go to /subscription and click Cancel. Cancellations are allowed during the first 3 days of each billing cycle."
+            },
+            {
+              q: "What payment methods do you accept?",
+              a: "We accept payments via stripe, supporting credit cards, debit cards and net banking."
+            },
+            {
+              q: "What happens if I exceed my token limit?",
+              a: "NoxyAI does not use token-based limits. Free plan gives access to basic models with unlimited usage. Pro plan offers unlimited access to all models."
+            },
+            {
+              q: "How do I request a refund?",
+              a: "Email support@noxyai.com within 7 days of purchase. Refunds are issued only for verified technical issues."
+            },
+            {
+              q: "How many AI models can Pro users access?",
+              a: "Pro users have access to all available models and can switch between them at any time."
+            },
+            {
+              q: "Can I switch models during a conversation?",
+              a: "Yes. Pro users can switch models at any time. The new model will not retain context from earlier messages."
+            }
+          ].map((faq, i) => (
+            <div key={i} className="border-b border-white/10 pb-6 group cursor-pointer hover:border-white/30 transition-colors">
+              <h3 className="text-xl font-medium text-white group-hover:text-blue-400 transition-colors mb-3">{faq.q}</h3>
+              <p className="text-gray-400 leading-relaxed text-sm">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* --- Footer with VIBRANT Magic Motion --- */}
       <footer className="relative pt-40 pb-12 overflow-hidden border-t border-white/10 group">
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -950,12 +1000,21 @@ const Skiper34 = () => {
       <section className="relative flex w-screen flex-col items-center gap-[10vh] px-4 pt-[20vh] pb-[20vh]">
         <div className="absolute left-1/2 top-10 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center">
           <span className="after:from-background after:to-foreground relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:content-['']">
-            scroll down to see effect
+            scroll down
           </span>
         </div>
         {images.map((img, idx) => (
           <StickyCard_003 key={idx} imgUrl={img} />
         ))}
+        {/* Generate Images CTA */}
+        <div className="flex flex-col items-center justify-center mt-32 mb-16 gap-6 relative z-30">
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
+            Generate images with AI and more etc
+          </h2>
+          <a href="https://noxyai.com/image" className="px-8 py-4 rounded-full bg-white text-black font-semibold tracking-wider hover:bg-gray-200 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            IMAGEN
+          </a>
+        </div>
       </section>
     </ReactLenis>
   );
@@ -973,7 +1032,7 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
     target: container,
   });
   
-  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 10000], [1, 0]);
+  const scale = useTransform(scrollY, [maxScrollY, maxScrollY + 1200], [1, 0]);
   const isInView = useInView(container, {
     margin: `0px 0px -${100 - vertMargin}% 0px`,
     once: true,
@@ -982,7 +1041,7 @@ const StickyCard_003 = ({ imgUrl }: { imgUrl: string }) => {
   scrollY.on("change", (scrollYValue) => {
     let animationValue = 1;
     if (scrollYValue > maxScrollY) {
-      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 10000);
+      animationValue = Math.max(0, 1 - (scrollYValue - maxScrollY) / 1200);
     }
     scale.set(animationValue);
     filter.set((1 - animationValue) * 100);
