@@ -98,7 +98,7 @@ export function SmoothInput({
 
   return (
     <div className={cn(
-      "bg-zinc-950 border border-zinc-800 focus-within:border-zinc-700 relative w-full rounded-xl px-4 py-3 flex items-center transition-all duration-300",
+      "bg-zinc-950 border border-zinc-800 focus-within:border-zinc-700 relative w-full rounded-xl px-3 py-2 sm:px-4 sm:py-3 flex items-center transition-all duration-300",
       wrapperClassName
     )}>
       <div

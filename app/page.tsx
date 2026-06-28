@@ -156,46 +156,52 @@ export function AnimatedLanding() {
         </div>
 
         <div className="p-6 space-y-6">
-          <div className="flex items-center gap-3 w-full">
-            <span className="text-zinc-500 font-mono text-sm">prompt$</span>
-            <SmoothInput
-              isSimulating={step === 1}
-              value={inputText}
-              placeholder="Enter your prompt..."
-              wrapperClassName="flex-1"
-              readOnly
-            />
-            <button 
-              className={cn(
-                "px-5 py-3 rounded-xl font-mono text-xs transition-all duration-300 font-semibold self-stretch flex items-center justify-center border border-zinc-800",
-                step >= 2 ? "bg-white text-black scale-95 shadow-[0_0_10px_rgba(255,255,255,0.3)] border-white" : "bg-zinc-800 text-zinc-500"
-              )}
-            >
-              [SEND]
-            </button>
-          </div>
-
-          <div className={cn("transition-opacity duration-500", step >= 3 ? "opacity-100" : "opacity-0 pointer-events-none")}>
-            <div className="border border-zinc-800 rounded-lg bg-black overflow-hidden flex flex-col">
-              <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] font-mono text-zinc-500">
-                <span>OUTPUT: GENERATED CODE</span>
-                {outputText.length === targetOutput.length && step >= 3 && (
-                  <span className="text-emerald-500 font-bold animate-pulse">DONE</span>
+            <div className="flex items-center gap-1.5 sm:gap-3 w-full">
+              <span className="text-zinc-500 font-mono text-xs sm:text-sm hidden sm:inline-block">prompt$</span>
+              <SmoothInput
+                isSimulating={step === 1}
+                value={inputText}
+                placeholder="Enter your prompt..."
+                wrapperClassName="flex-1"
+                readOnly
+              />
+              <button 
+                className={cn(
+                  "px-3 py-2 sm:px-5 sm:py-3 rounded-xl font-mono text-[10px] sm:text-xs transition-all duration-300 font-semibold self-stretch flex items-center justify-center border border-zinc-800",
+                  step >= 2 ? "bg-white text-black scale-95 shadow-[0_0_10px_rgba(255,255,255,0.3)] border-white" : "bg-zinc-800 text-zinc-500"
                 )}
-              </div>
-              <pre className="p-4 overflow-x-auto text-left font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap min-h-[240px]">
-                <code>
-                  {outputText}
-                  {outputText.length < targetOutput.length && step >= 3 && (
-                    <span className="inline-block w-1.5 h-4 bg-emerald-500 ml-0.5 animate-pulse"></span>
+              >
+                [SEND]
+              </button>
+            </div>
+
+            <div className="transition-opacity duration-500">
+              <div className="border border-zinc-800 rounded-lg bg-black overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between bg-zinc-900/50 px-4 py-2 border-b border-zinc-800 text-[10px] font-mono text-zinc-500">
+                  <span>OUTPUT: GENERATED CODE</span>
+                  {step < 3 && (
+                    <span className="text-zinc-600 font-bold animate-pulse">AWAITING PROMPT...</span>
                   )}
-                </code>
-              </pre>
+                  {step === 3 && outputText.length < targetOutput.length && (
+                    <span className="text-amber-500 font-bold animate-pulse">GENERATING...</span>
+                  )}
+                  {outputText.length === targetOutput.length && step >= 3 && (
+                    <span className="text-emerald-500 font-bold animate-pulse">DONE</span>
+                  )}
+                </div>
+                <pre className="p-4 overflow-x-auto text-left font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap min-h-[280px]">
+                  <code>
+                    {outputText}
+                    {outputText.length < targetOutput.length && step >= 3 && (
+                      <span className="inline-block w-1.5 h-4 bg-emerald-500 ml-0.5 animate-pulse"></span>
+                    )}
+                  </code>
+                </pre>
+              </div>
             </div>
           </div>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
   );
 }
 
@@ -743,7 +749,7 @@ export default function App() {
           Powered by hyper-efficient scheduling and next-generation neural routing to deliver instantaneous response times.
         </p>
         <div className="w-full max-w-5xl h-auto">
-          <CpuArchitecture className="text-white/80 w-full h-auto max-h-[450px]" />
+          <CpuArchitecture className="text-white/80 w-full h-auto max-h-[450px]" text="GPU" />
         </div>
       </section>
 
@@ -929,7 +935,7 @@ export default function App() {
             <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-16">AI for all humanity</h2>
             <div className="space-y-6 max-w-md">
               <h3 className="text-3xl font-medium">NoxyAI</h3>
-              <p className="text-gray-400 text-lg leading-relaxed">NoxyAI is an advanced multi-agent AI platform combining chat, image generation, voice AI, real-time search, coding, custom avatars, and an OpenAI-compatible API.</p>
+              <p className="text-gray-400 text-lg leading-relaxed">NoxyAI is an advanced multi-agent AI platform combining chat, image generation, voice AI, real-time search, coding, and custom avatars.</p>
             </div>
           </div>
           <div className="relative mt-8 lg:mt-0">
