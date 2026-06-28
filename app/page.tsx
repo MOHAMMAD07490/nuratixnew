@@ -221,6 +221,13 @@ export default function App() {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [heroPrompt, setHeroPrompt] = useState("");
+
+  const handleHeroSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!heroPrompt.trim()) return;
+    window.location.href = `https://www.noxyai.com/?q=${encodeURIComponent(heroPrompt.trim())}`;
+  };
 
   const [articles, setArticles] = useState([
     {
@@ -518,7 +525,8 @@ export default function App() {
         <div className="w-full h-full relative flex items-center justify-between px-8 sm:px-12 max-w-7xl mx-auto">
           
           {/* --- STATE A: PROMPT BOX (Fades and dissolves dynamically as page is scrolled) --- */}
-          <motion.div 
+          <motion.form 
+            onSubmit={handleHeroSubmit}
             className="absolute inset-0 flex items-center justify-between"
             style={{
               opacity: inputOpacity,
@@ -530,17 +538,19 @@ export default function App() {
             <input 
               type="text" 
               placeholder="Ask NoxyAI anything..." 
+              value={heroPrompt}
+              onChange={(e) => setHeroPrompt(e.target.value)}
               className="w-full bg-transparent border-none outline-none py-2 text-sm md:text-base placeholder-white/35 text-white font-normal tracking-wide" 
             />
             
             {/* Glass-Beveled High-Contrast Submit Token */}
-            <button className="bg-white hover:bg-neutral-100 text-black p-3 rounded-full shrink-0 transition-transform active:scale-95 shadow-md flex items-center justify-center">
+            <button type="submit" className="bg-white hover:bg-neutral-100 text-black p-3 rounded-full shrink-0 transition-transform active:scale-95 shadow-md flex items-center justify-center">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5" />
                 <polyline points="5 12 12 5 19 12" />
               </svg>
             </button>
-          </motion.div>
+          </motion.form>
 
           {/* --- STATE B: DOCKED HEADER CONTROLS --- */}
           {/* LEFT ELEMENT: NURATIX Logo png (with Gooey Split/Merge response) */}
